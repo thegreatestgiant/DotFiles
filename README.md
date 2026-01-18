@@ -30,16 +30,34 @@ We use symmetric encryption for sensitive configuration.
 * **Key Management:** The binary key is stored offline (Password Manager/USB).
 * **Warning:** Do NOT `git add` secret files unless `git-crypt status` confirms they are encrypted.
 
-## 🚀 Quick Start
+## 🚀 Installation
 
-### 1. Clone & Submodules
+### Option A: Automatic (Recommended)
+
+This repo includes a `setup.sh` script that installs dependencies (Nvim, Zsh, FZF, etc.), handles encryption keys, and stows your config.
+
+#### 1. **Clone & Run:**
+
+```bash
+git clone --recurse-submodules [https://github.com/thegreatestgiant/dotfiles.git](https://github.com/thegreatestgiant/dotfiles.git) ~/.files
+cd ~/.files
+./setup.sh 
+```
+
+#### 2. **Unlock Secrets**
+
+Ensure you have your dotfiles_key.key in your home folder or Downloads, and the script will automatically unlock it.
+
+### Option B: Manual
+
+#### 1. Clone
 
 ```bash
 git clone --recurse-submodules https://github.com/thegreatestgiant/dotfiles.git ~/.files
 cd ~/.files
 ```
 
-## 2. Unlock Secrets
+#### 2. Unlock Secrets
 
 Place your dotfiles_key.key in a secure location (e.g. ~/Downloads/) and run:
 
@@ -47,7 +65,7 @@ Place your dotfiles_key.key in a secure location (e.g. ~/Downloads/) and run:
 git-crypt unlock ~/Downloads/dotfiles_key.key
 ```
 
-## 3. Stow Packages
+#### 3. Stow Packages
 
 Use Stow to link your packages:
 
