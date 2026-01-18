@@ -1,0 +1,10 @@
+# Secrets to Encrypt
+# ------------------
+gh/.config/gh/hosts.yml filter=git-crypt diff=git-crypt
+docker/.docker/config.json filter=git-crypt diff=git-crypt
+*.env filter=git-crypt diff=git-crypt
+
+# Normal Files (Optional but good for consistency)
+# ------------------
+* text=auto
+*.sh text eol=lf
