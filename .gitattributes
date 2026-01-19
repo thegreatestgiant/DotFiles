@@ -8,3 +8,6 @@ docker/.docker/config.json filter=git-crypt diff=git-crypt
 # ------------------
 * text=auto
 *.sh text eol=lf
+ssh/.ssh/config filter=git-crypt diff=git-crypt
+ssh/.ssh/id_ed25519 filter=git-crypt diff=git-crypt
+rclone/.config/rclone/rclone.conf filter=git-crypt diff=git-crypt
