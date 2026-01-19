@@ -136,3 +136,6 @@ if [ "$SHELL" != "$(which zsh)" ]; then
 fi
 
 echo "🎉 All Systems Go!"
+
+# Fix SSH key permissions (Required for SSH to work)
+chmod 600 "$HOME/.ssh/id_ed25519" 2>/dev/null || true
