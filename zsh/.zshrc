@@ -272,7 +272,7 @@ export SUDO_EDITOR='nvim'
 export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To Comp Sci/edu.yu.cs.intro.hw6ShiurStats/src/main/java/"
 
 # Add custom path
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin"
 
 ### -------------------------------------------------------------------------
 ### 8. PROMPT (Starship)
