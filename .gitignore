@@ -1,2 +1,9 @@
+ssh/.ssh/environment-*
+
+# Ignore Tmux plugins in standard location
 tmux/.tmux/plugins/*
-!tmux/.tmux/plugins/tpm
+# !tmux/.tmux/plugins/tpm
+
+# Ignore Tmux plugins in XDG config location
+tmux/.config/tmux/plugins/*
+# !tmux/.config/tmux/plugins/tpm
