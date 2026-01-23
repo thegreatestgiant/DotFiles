@@ -1,0 +1,28 @@
+name: Test Dotfiles Bootstrap
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # Allows you to run the test manually from the GitHub website
+
+jobs:
+  test-ubuntu:
+    name: Ubuntu Sandbox Test
+    runs-on: ubuntu-latest
+    
+    # We use the EXACT same Docker image you used for your local testing
+    container: ubuntu:latest 
+
+    steps:
+      - name: 🛠️ Prepare Container
+        run: apt-get update && apt-get install -y git sudo
+
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true # Critically important to pull Nvim and Tmux plugins
+
+      - name: 🚀 Run Setup Script
+        run: bash setup.sh
