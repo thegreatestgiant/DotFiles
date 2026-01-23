@@ -4,6 +4,9 @@ set -e
 # ----------------------------------------------------------------------
 # ⚡️ Dotfiles Bootstrap Script (Dynamic Edition)
 # ----------------------------------------------------------------------
+export DEBIAN_FRONTEND=noninteractive
+export TZ="America/New_York"
+ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
 
 DOTFILES_DIR="$HOME/.files"
 REPO_URL="https://github.com/thegreatestgiant/dotfiles.git"
@@ -44,19 +47,24 @@ sudo apt install -y git stow zsh build-essential unzip \
 # 'fd' fix for Ubuntu
 if ! command -v fd &>/dev/null; then
     mkdir -p ~/.local/bin
-    ln -s $(which fdfind) ~/.local/bin/fd
+    # Added -f to force overwrite if it already exists
+    ln -sf $(which fdfind) ~/.local/bin/fd
 fi
 
 # 3. Install Vivid (Latest from GitHub)
 # ----------------------------------------------------------------------
 if ! command -v vivid &>/dev/null; then
     echo "🎨 Installing Vivid (Latest)..."
-    # Fetch latest tag name
+    # Fetch latest tag name (e.g., v0.10.1)
     VIVID_TAG=$(curl -s "https://api.github.com/repos/sharkdp/vivid/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
-    # Download
-    wget "https://github.com/sharkdp/vivid/releases/download/${VIVID_TAG}/vivid_${VIVID_TAG}_amd64.deb"
-    sudo dpkg -i "vivid_${VIVID_TAG}_amd64.deb"
-    rm "vivid_${VIVID_TAG}_amd64.deb"
+
+    # Strip the 'v' prefix for the Debian filename (results in 0.10.1)
+    VIVID_VERSION="${VIVID_TAG#v}"
+
+    # Download using the tag for the URL, and the stripped version for the file
+    wget "https://github.com/sharkdp/vivid/releases/download/${VIVID_TAG}/vivid_${VIVID_VERSION}_amd64.deb"
+    sudo dpkg -i "vivid_${VIVID_VERSION}_amd64.deb"
+    rm "vivid_${VIVID_VERSION}_amd64.deb"
 fi
 
 # 4. Install FZF & Lazygit (Latest)
@@ -80,15 +88,38 @@ fi
 # ----------------------------------------------------------------------
 if ! command -v nvim &>/dev/null; then
     echo "📝 Installing Neovim..."
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-    sudo rm -rf /opt/nvim
-    sudo tar -C /opt -xzf nvim-linux64.tar.gz
 
-    export PATH="$PATH:/opt/nvim-linux64/bin"
-    if ! grep -q "/opt/nvim-linux64/bin" "$HOME/.bashrc"; then
-        echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >>"$HOME/.bashrc"
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim-linux-x86_64
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+
+    # Add to PATH (updating the folder name)
+    export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+    if ! grep -q "/opt/nvim-linux-x86_64/bin" "$HOME/.bashrc"; then
+        echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >>"$HOME/.bashrc"
     fi
-    rm nvim-linux64.tar.gz
+
+    rm nvim-linux-x86_64.tar.gz
+fi
+
+# 5.1 Install Latest Golang
+# ----------------------------------------------------------------------
+if ! command -v go &>/dev/null; then
+    echo "🐹 Installing Latest Golang..."
+    # Scrape the official website for the latest version tag (e.g., go1.24.0)
+    GO_VERSION=$(curl -sL https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+
+    # Download and extract to /usr/local
+    wget "https://dl.google.com/go/${GO_VERSION}.linux-amd64.tar.gz"
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf "${GO_VERSION}.linux-amd64.tar.gz"
+    rm "${GO_VERSION}.linux-amd64.tar.gz"
+    rm -rf "${HOME}/go"
+
+    # Add to PATH temporarily for this script
+    export PATH="$PATH:/usr/local/go/bin"
+
+    # NOTE: Your zsh/.zshrc already has /usr/local/go/bin in the PATH, so it will work on reboot!
 fi
 
 # 6. Clone & Unlock
@@ -109,13 +140,6 @@ fi
 # ----------------------------------------------------------------------
 echo "🔗 Stowing..."
 
-# Check if ignore file exists
-if [ ! -f ".stow-local-ignore" ]; then
-    echo "⚠️  WARNING: .stow-local-ignore not found!"
-    echo "    Please create it to avoid stowing README/git files."
-    exit 1
-fi
-
 # Backup conflicts
 for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux"; do
     if [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
@@ -123,7 +147,17 @@ for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux"; do
     fi
 done
 
-stow bash zsh nvim tmux starship git gh
+stow bash zsh nvim tmux starship git gh ssh
+
+# 7.5 Install Zoxide (Latest via Script)
+# ----------------------------------------------------------------------
+if ! command -v zoxide &>/dev/null; then
+    echo "📂 Installing Zoxide..."
+    curl -sSf https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+
+    # FIX: Move Zoxide to a globally accessible path
+    sudo mv ~/.local/bin/zoxide /usr/local/bin/
+fi
 
 # 8. Final Polish
 # ----------------------------------------------------------------------
@@ -135,7 +169,8 @@ if [ "$SHELL" != "$(which zsh)" ]; then
     chsh -s $(which zsh)
 fi
 
-echo "🎉 All Systems Go!"
-
-# Fix SSH key permissions (Required for SSH to work)
 chmod 600 "$HOME/.ssh/id_ed25519" 2>/dev/null || true
+
+# FIX 3: Added clear instructions instead of forcing a shell change
+echo "🎉 All Systems Go!"
+echo "👉 Please restart your terminal or run 'zsh' to load your new environment."
