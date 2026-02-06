@@ -4,44 +4,45 @@
 
 # Variables
 rofi_theme="$HOME/.config/hypr/rofi/config-clipboard.rasi"
-msg='👀 **note**  CTRL DEL = cliphist del (entry)   or   ALT DEL - cliphist wipe (all)'
-# Actions:
-# CTRL Del to delete an entry
-# ALT Del to wipe clipboard contents
+msg='👀 <b>note</b>  CTRL+DEL = Delete Entry  |  CTRL+SHIFT+DEL = Wipe All'
 
 # Check if rofi is already running
 if pidof rofi >/dev/null; then
     pkill rofi
+    exit 0
 fi
 
 while true; do
     result=$(
         rofi -i -dmenu \
-            -kb-custom-1 "Control-Delete" \
-            -kb-custom-2 "Alt-Delete" \
-            -config $rofi_theme \
-            -mesg "$msg" < <(cliphist list)
+            -kb-custom-1 "Control+Delete" \
+            -kb-custom-2 "Control+Shift+Delete" \
+            -config "$rofi_theme" \
+            -mesg "$msg" \
+            -keep-right \
+            < <(cliphist list)
     )
 
-    case "$?" in
-    1)
+    # Store the exit code immediately
+    exit_code=$?
+
+    case "$exit_code" in
+    1) # Escape / Close
         exit
         ;;
-    0)
+    0) # Select Entry (Enter)
         case "$result" in
-        "")
-            continue
-            ;;
+        "") continue ;;
         *)
             cliphist decode <<<"$result" | wl-copy
             exit
             ;;
         esac
         ;;
-    10)
+    10) # Control+Delete (Delete Entry)
         cliphist delete <<<"$result"
         ;;
-    11)
+    11) # Alt+Delete (Wipe All)
         cliphist wipe
         ;;
     esac
