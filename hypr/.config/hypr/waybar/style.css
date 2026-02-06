@@ -1,0 +1,90 @@
+/* --- GLOBAL FONT & BAR STYLING --- */
+* {
+    font-family: "JetBrainsMono Nerd Font Propo", "Font Awesome 6 Free";
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+window#waybar {
+    background: transparent; /* Makes the main bar invisible */
+}
+
+/* --- THE "PILLS" (Left, Center, Right modules) --- */
+.modules-left, .modules-center, .modules-right {
+    background: rgba(30, 30, 46, 0.85); /* Catppuccin Mocha dark base, 85% opacity */
+    border: 1px solid rgba(137, 180, 250, 0.3); /* Subtle blue outer glow */
+    border-radius: 16px;
+    margin: 6px 10px; /* Floats the bar away from the edges */
+    padding: 2px 12px;
+}
+
+/* --- ICON SPACING --- */
+#custom-switcher, #idle_inhibitor, #network, #window, 
+#workspaces, #submap, #privacy, #tray, #custom-stats, 
+#backlight, #pulseaudio, #battery, #clock, #custom-power {
+    padding: 0 8px;
+    margin: 0 2px;
+    color: #cdd6f4; /* Mocha Text color */
+}
+
+/* --- THE FIXES --- */
+
+/* 1. Ubuntu App Switcher (Orange & Large) */
+#custom-switcher {
+    color: #E95420; 
+    font-size: 18px;
+    padding-right: 12px;
+}
+
+/* 2. Idle Inhibitor Stability */
+#idle_inhibitor {
+    min-width: 16px;
+    padding-right: 10px;
+}
+#idle_inhibitor.activated {
+    color: #fab387; /* Peach when active */
+}
+
+/* --- CHROMA COLORS (The "Aurora" Aesthetic) --- */
+
+#workspaces button {
+    color: #6c7086; /* Dim inactive dots */
+    background: transparent;
+    box-shadow: none;
+    padding: 0 2px;
+}
+#workspaces button.active {
+    color: #89b4fa; /* Blue active dot */
+}
+
+#privacy { color: #fab387; } /* Orange Mic Warning */
+#custom-stats { color: #cba6f7; } /* Purple Microchip */
+#backlight { color: #f9e2af; } /* Yellow Sun */
+#pulseaudio { color: #89b4fa; } /* Blue Audio */
+#network { color: #a6e3a1; } /* Green WiFi */
+#clock { color: #89dceb; } /* Cyan Clock */
+#custom-power { color: #f38ba8; } /* Red Power Button */
+
+/* --- BATTERY STATES --- */
+#battery.charging, #battery.plugged {
+    color: #a6e3a1; /* Green when plugged */
+}
+#battery.warning {
+    color: #fab387; /* Orange when low */
+}
+#battery.critical {
+    color: #f38ba8; /* Red when dying */
+    animation: blink 1s linear infinite; /* Blinks when dying */
+}
+
+@keyframes blink {
+    to { color: rgba(243, 139, 168, 0.3); }
+}
+
+/* Hover Effects */
+#custom-switcher:hover, #custom-stats:hover, #custom-power:hover, 
+#pulseaudio:hover, #backlight:hover, #clock:hover {
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glow on hover */
+}

@@ -141,3 +141,4 @@ bind -x '"\C-l":clear'
 export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To Comp Sci/edu.yu.cs.intro.hw6ShiurStats/src/main/java/"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+. "$HOME/.cargo/env"

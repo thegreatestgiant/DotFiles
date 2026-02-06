@@ -1,0 +1,243 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 6,
+
+    "modules-left": [
+        "custom/switcher", // NEW: Ubuntu Logo App Switcher
+        "idle_inhibitor",
+        "network#speed",
+        "hyprland/window"
+    ],
+    "modules-center": [
+        "hyprland/workspaces"
+    ],
+    "modules-right": [
+        "hyprland/submap",
+        "privacy",
+        "tray",
+        "custom/stats", // NEW: Microchip Hover-Only Stats
+        "backlight",
+        "pulseaudio",
+        "battery",
+        "clock",
+        "custom/power" 
+    ],
+
+    // --- CENTER ---
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "persistent-workspaces": { "*": 4 },
+        "format-icons": { "active": "", "default": "" }
+    },
+
+    // --- RIGHT SIDE ---
+
+    "clock": {
+        "interval": 1,
+        "format": " {:%I:%M %p}",
+        "format-alt": " {:%I:%M %p  |  %A, %B %d, %Y}", 
+        "tooltip-format": "<tt><small>{calendar}</small></tt>"
+    },
+
+    // THE HOVER STATS
+    "custom/stats": {
+        "format": "",
+        "tooltip": true,
+        "interval": 2,
+        "exec": "echo '{\"text\": \"\", \"tooltip\": \"CPU: '\"$(top -bn1 | grep 'Cpu(s)' | awk '{print 100 - $8}')\"'%\\nRAM: '\"$(free -m | awk '/Mem:/ { printf(\"%3.1f%%\", $3/$2*100) }')\"'\\nTEMP: '\"$(sensors | grep 'Package id 0:' | awk '{print $4}')\"'\"}'",
+        "return-type": "json",
+        "on-click": "gnome-system-monitor"
+    },
+
+    // BATTERY: Wattage removed
+    "battery": {
+        "states": { "good": 95, "warning": 30, "critical": 15 },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": "󱘖 {capacity}%", 
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "{timeTo} remaining  |  Health: {health}%"
+    },
+
+    // AUDIO: Clicking now opens pavucontrol
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁",
+        "format-icons": { "default": ["", "", "󰕾", ""] },
+        "on-click": "pavucontrol -t 3", 
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
+    },
+
+    // BRIGHTNESS: Scroll only
+    "backlight": {
+        "interval": 2,
+        "format": "{icon} {percent}%", 
+        "format-icons": ["", "", "", "󰃝", "󰃞", "󰃟", "󰃠"],
+        "on-click": "", 
+        "on-scroll-up": "brightnessctl set 1%+ -q", 
+        "on-scroll-down": "brightnessctl set 1%- -q"
+    },
+
+    "privacy": {
+        "icon-spacing": 4,
+        "icon-size": 18,
+        "modules": [
+            { "type": "screenshare", "tooltip": true },
+            { "type": "audio-in", "tooltip": true }
+        ]
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "$HOME/.config/hypr/scripts/Wlogout.sh",
+        "tooltip-format": "Power Menu"
+    },
+
+    // --- LEFT SIDE ---
+    // THE UBUNTU APP SWITCHER
+    "custom/switcher": {
+        "format": "", 
+        "on-click": "rofi -show window",
+        "tooltip-format": "Switch Windows"
+    },
+
+    "network#speed": {
+        "interval": 1,
+        "format-wifi": "{icon}  {bandwidthUpBytes}  {bandwidthDownBytes}",
+        "format-ethernet": "󰌘  {bandwidthUpBytes}  {bandwidthDownBytes}",
+        "format-disconnected": "󰌙",
+        "min-length": 24,
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
+    },
+
+    "hyprland/window": { "format": "{}", "max-length": 40 },
+    "hyprland/submap": { "format": "<span style=\"italic\">⚠️ {}</span>", "tooltip": false },
+    "tray": { "icon-size": 18, "spacing": 4 },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": " ",
+            "deactivated": " "
+        }
+    }
+}
+// {
+//     "layer": "top",
+//     "position": "top",
+//     "height": 36,
+//     "spacing": 6,
+//
+//     "modules-left": [
+//         "custom/switcher", // NEW: Ubuntu Logo App Switcher
+//         "idle_inhibitor",
+//         "network#speed",
+//         "hyprland/window"
+//     ],
+//     "modules-center": [
+//         "hyprland/workspaces"
+//     ],
+//     "modules-right": [
+//         "hyprland/submap",
+//         "privacy",
+//         "tray",
+//         "backlight",
+//         "pulseaudio",
+//         "battery",
+//         "clock",
+//         "custom/power" 
+//     ],
+//
+//     // --- CENTER ---
+//     "hyprland/workspaces": {
+//         "format": "{icon}",
+//         "persistent-workspaces": { "*": 4 },
+//         "format-icons": { "active": "", "default": "" }
+//     },
+//
+//     // --- RIGHT SIDE ---
+//
+//     "clock": {
+//         "interval": 1,
+//         "format": " {:%I:%M %p}",
+//         "format-alt": " {:%I:%M %p  |  %A, %B %d, %Y}", 
+//         "tooltip-format": "<tt><small>{calendar}</small></tt>"
+//     },
+//
+//     // BATTERY: Wattage removed
+//     "battery": {
+//         "states": { "good": 95, "warning": 30, "critical": 15 },
+//         "format": "{icon} {capacity}%",
+//         "format-charging": " {capacity}%",
+//         "format-plugged": "󱘖 {capacity}%", 
+//         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+//         "tooltip-format": "{timeTo} remaining  |  Health: {health}%"
+//     },
+//
+//     // AUDIO: Clicking now opens pavucontrol
+//     "pulseaudio": {
+//         "format": "{icon} {volume}%",
+//         "format-muted": "󰖁",
+//         "format-icons": { "default": ["", "", "󰕾", ""] },
+//         "on-click": "pavucontrol -t 3", 
+//         "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+",
+//         "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"
+//     },
+//
+//     // BRIGHTNESS: Scroll only
+//     "backlight": {
+//         "interval": 2,
+//         "format": "{icon} {percent}%", 
+//         "format-icons": ["", "", "", "󰃝", "󰃞", "󰃟", "󰃠"],
+//         "on-click": "", 
+//         "on-scroll-up": "brightnessctl set 1%+ -q", 
+//         "on-scroll-down": "brightnessctl set 1%- -q"
+//     },
+//
+//     "privacy": {
+//         "icon-spacing": 4,
+//         "icon-size": 18,
+//         "modules": [
+//             { "type": "screenshare", "tooltip": true },
+//             { "type": "audio-in", "tooltip": true }
+//         ]
+//     },
+//
+//     "custom/power": {
+//         "format": "⏻",
+//         "on-click": "$HOME/.config/hypr/scripts/Wlogout.sh",
+//         "tooltip-format": "Power Menu"
+//     },
+//
+//     // --- LEFT SIDE ---
+//     // THE UBUNTU APP SWITCHER
+//     "custom/switcher": {
+//         "format": "", 
+//         "on-click": "rofi -show window",
+//         "tooltip-format": "Switch Windows"
+//     },
+//
+//     "network#speed": {
+//         "interval": 1,
+//         "format-wifi": "{icon}  {bandwidthUpBytes}  {bandwidthDownBytes}",
+//         "format-ethernet": "󰌘  {bandwidthUpBytes}  {bandwidthDownBytes}",
+//         "format-disconnected": "󰌙",
+//         "min-length": 24,
+//         "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
+//     },
+//
+//     "hyprland/window": { "format": "{}", "max-length": 40 },
+//     "hyprland/submap": { "format": "<span style=\"italic\">⚠️ {}</span>", "tooltip": false },
+//     "tray": { "icon-size": 18, "spacing": 4 },
+//
+//     "idle_inhibitor": {
+//         "format": "{icon}",
+//         "format-icons": {
+//             "activated": " ",
+//             "deactivated": " "
+//         }
+//     }
+// }
