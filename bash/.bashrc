@@ -142,3 +142,8 @@ export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 . "$HOME/.cargo/env"
+
+# SSH Agent Bridge (Bitwarden/WSL)
+if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
+    source "$HOME/.ssh/ssh-agent-bridge-bit.sh"
+fi

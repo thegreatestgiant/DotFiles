@@ -274,6 +274,11 @@ export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To
 # Add custom path
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin"
 
+# SSH Agent Bridge (Bitwarden/WSL)
+if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
+    source "$HOME/.ssh/ssh-agent-bridge-bit.sh"
+fi
+
 ### -------------------------------------------------------------------------
 ### 8. PROMPT (Starship)
 ### -------------------------------------------------------------------------
