@@ -19,8 +19,11 @@ Stow generates symlinks relative to the parent (`~`).
 | **Zsh** | `.zshrc` | Shell configuration |
 | **Bash** | `.bashrc` | Shell configuration fallback |
 | **Starship** | `.config/starship.toml` | Cross-shell prompt |
+| **Hyprland** | `.config/hypr` | Window Manager, Waybar, Wlogout, & SwayNC config |
+| **Kitty** | `.config/kitty` | Terminal emulator configuration |
 | **Git** | `.gitconfig` | Version control settings |
 | **GitHub** | `.config/gh` | GH CLI config (Encrypted) |
+| **SSH** | `.ssh/config` | SSH Config (Encrypted) |
 
 ### 🔐 Security (Git-Crypt)
 
@@ -39,7 +42,7 @@ This repo includes a `setup.sh` script that installs dependencies (Nvim, Zsh, FZ
 #### 1. **Clone & Run:**
 
 ```bash
-git clone --recurse-submodules [https://github.com/thegreatestgiant/dotfiles.git](https://github.com/thegreatestgiant/dotfiles.git) ~/.files
+git clone --recurse-submodules https://github.com/thegreatestgiant/dotfiles.git ~/.files
 cd ~/.files
 ./setup.sh 
 ```
@@ -70,5 +73,5 @@ git-crypt unlock ~/Downloads/dotfiles_key.key
 Use Stow to link your packages:
 
 ```Bash
-stow bash zsh nvim tmux starship git gh
+stow bash zsh nvim tmux starship git gh ssh
 ```
