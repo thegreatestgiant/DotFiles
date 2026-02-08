@@ -12,7 +12,7 @@
 }
 {
     "label" : "shutdown",
-    "action" : "hyprsession save; systemctl poweroff",
+    "action" : "systemctl poweroff",
     "text" : "Shutdown",
     "keybind" : "s"
 }

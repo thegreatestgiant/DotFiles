@@ -3,7 +3,4 @@
 
 # For Hyprlock
 #pidof hyprlock || hyprlock -q
-
-hyprsession save
-
 loginctl lock-session

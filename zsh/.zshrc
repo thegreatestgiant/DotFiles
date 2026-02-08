@@ -268,7 +268,10 @@ export SUDO_EDITOR='nvim'
 export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To Comp Sci/edu.yu.cs.intro.hw6ShiurStats/src/main/java/"
 
 # Add custom path
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin:$HOME/.local/bin"
+
+# Bitwarden SSH Agent
+export SSH_AUTH_SOCK=/home/sean/.bitwarden-ssh-agent.sock
 
 # SSH Agent Bridge (Bitwarden/WSL)
 if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
