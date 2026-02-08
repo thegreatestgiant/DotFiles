@@ -39,10 +39,6 @@ zinit light zsh-users/zsh-completions
 zinit ice wait lucid
 zinit light aloxaf/fzf-tab
 
-# SSH Agent (Lazy load ssh-agent)
-zinit ice wait lucid
-zinit snippet OMZP::ssh-agent
-
 # Sudo Plugin (Press Esc-Esc to add sudo)
 zinit ice wait lucid
 zinit snippet OMZP::sudo
