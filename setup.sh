@@ -29,11 +29,11 @@ if ! command -v eza &>/dev/null; then
 fi
 
 # Add GitHub CLI Repo
-if ! command -v gh &>/dev/null; then
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
-        sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
-fi
+# if ! command -v gh &>/dev/null; then
+#     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
+#         sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&
+#         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+# fi
 
 sudo apt update
 
@@ -42,7 +42,8 @@ sudo apt update
 echo "📦 Installing system packages..."
 sudo apt install -y git stow zsh build-essential unzip \
     ripgrep fd-find xclip python3-venv \
-    nodejs npm gh eza
+    nodejs npm eza
+# gh
 
 # 'fd' fix for Ubuntu
 if ! command -v fd &>/dev/null; then
@@ -147,7 +148,7 @@ for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux"; do
     fi
 done
 
-stow bash zsh nvim tmux starship git gh ssh
+stow bash zsh nvim tmux starship git ssh
 
 # 7.5 Install Zoxide (Latest via Script)
 # ----------------------------------------------------------------------
