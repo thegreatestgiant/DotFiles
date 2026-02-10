@@ -42,7 +42,7 @@ sudo apt update
 echo "📦 Installing system packages..."
 sudo apt install -y git stow zsh build-essential unzip \
     ripgrep fd-find xclip python3-venv \
-    nodejs npm eza
+    nodejs npm eza ncurses-term
 # gh
 
 # 'fd' fix for Ubuntu
