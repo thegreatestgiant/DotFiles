@@ -44,6 +44,7 @@ This repo includes a `setup.sh` script that installs dependencies (Nvim, Zsh, FZ
 ```bash
 git clone --recurse-submodules https://github.com/thegreatestgiant/dotfiles.git ~/.files
 cd ~/.files
+chmod +x setup.sh
 ./setup.sh 
 ```
 
