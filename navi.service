@@ -1,0 +1,11 @@
+[Unit]
+Description=rclone
+
+[Service]
+user=sean
+Environment=HOME=/home/sean
+ExecStart=/usr/bin/rclone mount navi:Playlists /home/sean/navi --allow-other --allow-non-empty --vfs-cache-mode full
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
