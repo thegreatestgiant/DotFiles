@@ -1,0 +1,31 @@
+[Unit]
+    Description=rclone
+
+    [Service]
+    User=sean
+    ExecStart=/usr/bin/rclone mount kavita: /home/sean/Kavita \
+--no-checksum \
+--use-server-modtime \
+--no-gzip-encoding \
+--no-seek \
+--allow-other \
+--allow-non-empty \
+--cache-read-retries 15 \
+--cache-db-purge \
+--buffer-size 512M \
+--dir-cache-time 500h \
+--timeout 500h \
+--vfs-cache-max-age 500h \
+--vfs-read-ahead 1G \
+--vfs-read-chunk-size 32M \
+--vfs-cache-max-size 25G \
+--cache-dir=/home/sean/.cache \
+--vfs-cache-poll-interval 10s \
+--poll-interval 10s \
+--attr-timeout 20s \
+--vfs-cache-mode full
+    Restart=on-abort
+
+
+    [Install]
+    WantedBy=multi-user.target
