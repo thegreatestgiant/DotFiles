@@ -14,4 +14,8 @@ if grep -q "microsoft" /proc/version 2>/dev/null; then
         # We use the symlink 'npiperelay.exe' you created earlier
         (setsid socat UNIX-LISTEN:"$SSH_AUTH_SOCK",fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &) >/dev/null 2>&1
     fi
+else
+
+    # Bitwarden SSH Agent
+    export SSH_AUTH_SOCK=/home/sean/.bitwarden-ssh-agent.sock
 fi
