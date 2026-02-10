@@ -22,8 +22,8 @@ Stow generates symlinks relative to the parent (`~`).
 | **Hyprland** | `.config/hypr` | Window Manager, Waybar, Wlogout, & SwayNC config |
 | **Kitty** | `.config/kitty` | Terminal emulator configuration |
 | **Git** | `.gitconfig` | Version control settings |
-| **GitHub** | `.config/gh` | GH CLI config (Encrypted) |
 | **SSH** | `.ssh/config` | SSH Config (Encrypted) |
+| **GitHub** | `.config/gh` | REMOVED GH CLI config (Encrypted) REMOVED |
 
 ### 🔐 Security (Git-Crypt)
 
@@ -73,5 +73,5 @@ git-crypt unlock ~/Downloads/dotfiles_key.key
 Use Stow to link your packages:
 
 ```Bash
-stow bash zsh nvim tmux starship git gh ssh
+stow bash zsh nvim tmux starship git ssh
 ```
