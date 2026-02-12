@@ -7,3 +7,14 @@ tmux/.tmux/plugins/*
 # Ignore Tmux plugins in XDG config location
 tmux/.config/tmux/plugins/*
 # !tmux/.config/tmux/plugins/tpm
+
+# Ignore Wallust generated themes
+**/wallust/
+**/colors-rofi.rasi
+**/colors-waybar.css
+**/01-Wallust.conf
+**/cava
+
+# Ignore wallpaper state files
+.current_wallpaper
+.wallpaper_current
