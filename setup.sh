@@ -170,8 +170,6 @@ if [ "$SHELL" != "$(which zsh)" ]; then
     chsh -s $(which zsh)
 fi
 
-chmod 600 "$HOME/.ssh/id_ed25519" 2>/dev/null || true
-
 # FIX 3: Added clear instructions instead of forcing a shell change
 echo "🎉 All Systems Go!"
 echo "👉 Please restart your terminal or run 'zsh' to load your new environment."
