@@ -8,10 +8,10 @@ tmux/.tmux/plugins/*
 tmux/.config/tmux/plugins/*
 # !tmux/.config/tmux/plugins/tpm
 
-# Ignore Wallust generated themes
-**/wallust/
-**/colors-rofi.rasi
-**/colors-waybar.css
+# Ignore Wallust generated output files (but keep directories via .gitkeep)
+**/rofi/wallust/*
+**/waybar/wallust/*
+!**/.gitkeep
 **/01-Wallust.conf
 **/cava
 
