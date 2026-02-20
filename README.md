@@ -73,6 +73,12 @@ git-crypt unlock ~/Downloads/dotfiles_key.key
 
 Use Stow to link your packages:
 
-```Bash
 stow bash zsh nvim tmux starship git ssh
-```
+
+# Desktop only — uncomment on machines with Hyprland
+# NOTE: wallust-generated files (colors-rofi.rasi, colors-waybar.css,
+#       wallust-hyprland.conf etc.) won't exist until first wallpaper change.
+#       This is expected — they are gitignored on purpose.
+# NOTE: if ~/Pictures/wallpapers is a symlink, WallpaperSelect.sh requires
+#       find -L to resolve it — see WallpaperSelect.sh line ~115.
+# stow hypr kitty rclone
