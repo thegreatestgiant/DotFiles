@@ -216,7 +216,6 @@ sdk() { lazy_load_sdkman sdk "$@"; }
 java() { lazy_load_sdkman java "$@"; }
 javac() { lazy_load_sdkman javac "$@"; }
 mvn() { lazy_load_sdkman mvn "$@"; }
-gradle() { lazy_load_sdkman gradle "$@"; }
 
 ### -------------------------------------------------------------------------
 ### 7. ALIASES & TOOLS
@@ -265,9 +264,6 @@ alias grep='grep --color=auto'
 export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 
-# Classpath (Ported)
-export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To Comp Sci/edu.yu.cs.intro.hw6ShiurStats/src/main/java/"
-
 # Add custom path
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin:$HOME/.local/bin"
 
@@ -281,3 +277,4 @@ fi
 ### 8. PROMPT (Starship)
 ### -------------------------------------------------------------------------
 eval "$(starship init zsh)"
+
