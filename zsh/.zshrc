@@ -207,7 +207,7 @@ npx() { lazy_load_nvm npx "$@"; }
 # Similar concept for SDKMAN
 export SDKMAN_DIR="$HOME/.sdkman"
 lazy_load_sdkman() {
-  unset -f sdk java javac mvn gradle
+  unset -f sdk java javac mvn 
   [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
   "$@"
 }
@@ -265,8 +265,8 @@ export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 
 # Add custom path
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin:$HOME/.local/bin"
-
+# Add Node global binaries explicitly so they work without triggering NVM
+export PATH="$HOME/.nvm/versions/node/v22.22.0/bin:$PATH:/opt/nvim-linux-x86_64/bin:/usr/local/go/bin:$HOME/.local/bin"
 
 # SSH Agent Bridge (Bitwarden/WSL)
 if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
