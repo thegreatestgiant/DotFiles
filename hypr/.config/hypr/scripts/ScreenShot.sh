@@ -5,7 +5,7 @@
 # variables
 time=$(date "+%d-%b_%H-%M-%S")
 PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || echo "$HOME/Pictures")"
-dir="~/Pictures/Screenshots"
+dir="$HOME/Pictures/Screenshots"
 file="Screenshot_${time}_${RANDOM}.png"
 
 iDIR="$HOME/.config/hypr/swaync/icons"
