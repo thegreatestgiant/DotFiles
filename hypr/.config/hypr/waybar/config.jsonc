@@ -46,7 +46,7 @@
         "format": "",
         "tooltip": true,
         "interval": 2,
-        "exec": "echo '{\"text\": \"\", \"tooltip\": \"CPU: '\"$(top -bn1 | grep 'Cpu(s)' | awk '{print 100 - $8}')\"'%\\nRAM: '\"$(free -m | awk '/Mem:/ { printf(\"%3.1f%%\", $3/$2*100) }')\"'\\nTEMP: '\"$(sensors | grep 'Package id 0:' | awk '{print $4}')\"'\"}'",
+        "exec": "echo '{\"text\": \"\", \"tooltip\": \"CPU: '\"$(top -bn1 | grep 'Cpu(s)' | awk '{print 100 - $8}')\"'%\\nRAM: '\"$(free -m | awk '/Mem:/ { printf(\"%3.1f%%\", $3/$2*100) }')\"'\\nTEMP: '\"$(sensors | grep 'Tdie' | awk '{print $4}')\"'\"}'",
         "return-type": "json",
         "on-click": "gnome-system-monitor"
     },
