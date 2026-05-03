@@ -20,20 +20,20 @@ apply_wallpaper() {
     local wallpaper="$1"
     local monitor="${2:-$(get_focused_monitor)}"
     
-    # Ensure swww daemon is running
-    if ! pgrep -x swww-daemon >/dev/null; then
-        swww-daemon --format xrgb &
+    # Ensure awww daemon is running
+    if ! pgrep -x awww-daemon >/dev/null; then
+        awww-daemon --format xrgb &
         sleep 0.5
     fi
     
     # Apply wallpaper
-    swww img -o "$monitor" "$wallpaper" \
+    awww img -o "$monitor" "$wallpaper" \
         --transition-fps 60 \
         --transition-type random \
         --transition-duration 2
     
     # Update color scheme
-    "$SCRIPTSDIR/WallustSwww.sh" "$wallpaper"
+    "$SCRIPTSDIR/WallustAwww.sh" "$wallpaper"
     
     # Refresh UI
     sleep 2

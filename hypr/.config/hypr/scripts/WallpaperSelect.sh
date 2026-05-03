@@ -13,7 +13,7 @@ wallpaper_current="$HOME/.config/hypr/wallpaper_effects/.wallpaper_current"
 iDIR="$HOME/.config/hypr/swaync/images"
 iDIRi="$HOME/.config/hypr/swaync/icons"
 
-# swww transition config
+# awww transition config
 FPS=60
 TYPE="any"
 DURATION=2
@@ -46,7 +46,7 @@ rofi_override="element-icon{size:${adjusted_icon_size}%;}"
 
 # Kill existing wallpaper daemons for video
 kill_wallpaper_for_video() {
-    swww kill 2>/dev/null
+    awww kill 2>/dev/null
     pkill mpvpaper 2>/dev/null
     pkill swaybg 2>/dev/null
     pkill hyprpaper 2>/dev/null
@@ -105,15 +105,15 @@ apply_image_wallpaper() {
 
     kill_wallpaper_for_image
 
-    if ! pgrep -x "swww-daemon" >/dev/null; then
-        echo "Starting swww-daemon..."
-        swww-daemon --format xrgb &
+    if ! pgrep -x "awww-daemon" >/dev/null; then
+        echo "Starting awww-daemon..."
+        awww-daemon --format xrgb &
     fi
 
-    swww img -o "$focused_monitor" "$image_path" $SWWW_PARAMS
+    awww img -o "$focused_monitor" "$image_path" $SWWW_PARAMS
 
     # Run additional scripts (pass the image path to avoid cache race conditions)
-    "$SCRIPTSDIR/WallustSwww.sh" "$image_path"
+    "$SCRIPTSDIR/WallustAwww.sh" "$image_path"
     sleep 2
     "$SCRIPTSDIR/Refresh.sh"
     sleep 1
