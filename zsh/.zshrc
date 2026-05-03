@@ -143,9 +143,7 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview '
     eza -1 -a --color=always --icons --group-directories-first $realpath
   else
     # File -> Show colorful content
-    if command -v batcat > /dev/null; then
-      batcat --color=always --style=numbers --line-range=:500 $realpath
-    elif command -v bat > /dev/null; then
+    if command -v bat> /dev/null; then
       bat --color=always --style=numbers --line-range=:500 $realpath
     else
       cat $realpath
@@ -246,6 +244,9 @@ bindkey . rationalise-dot
 # --icons: show icons
 # --group-directories-first: folders on top
 # --git: show git status symbols
+alias c='wl-copy'
+alias v='wl-paste'
+
 alias ls='eza --icons --group-directories-first --git'
 
 alias ll='eza --icons --group-directories-first --git -la --header --time-style=long-iso'
@@ -255,10 +256,17 @@ alias lt='eza --icons -a --tree --level=2'
 alias llt='eza --icons -a --tree --level=2 -l'
 
 # General Aliases
-alias i='sudo apt install -y'
+alias i='paru -S --noconfirm'
 alias ip='curl icanhazip.com'
-alias zupdate='sudo apt update && sudo apt upgrade -y'
+alias zupdate='paru -Syu'
 alias grep='grep --color=auto'
+
+# System Maintenance
+alias cleanup='paru -Scc'                                         # Safely clear out downloaded package files to free up space
+alias orphans='sudo pacman -Rns $(pacman -Qtdq)'                  # Finds and deletes dependencies that no longer belong to any installed app
+
+# The Power User FZF Installer
+alias pin='paru -Slq | fzf --multi --preview "paru -Si {1}" | xargs -ro paru -S'
 
 # NVIM as default editor
 export EDITOR='nvim'
