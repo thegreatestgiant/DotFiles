@@ -17,13 +17,21 @@
         "hyprland/submap",
         "privacy",
         "tray",
-        "custom/stats", // NEW: Microchip Hover-Only Stats
+        "custom/stats", 
+        "custom/keyboard-layout",
         "backlight",
         "pulseaudio",
         "battery",
         "clock",
         "custom/power" 
     ],
+
+    "custom/keyboard-layout": {
+        "exec": "~/.config/hypr/scripts/KeyboardLayout.sh status",
+        "interval": 2,
+        "format": "  {}",
+        "tooltip-format": "Layout: {}\nAlt+Shift to switch"
+    },
 
     // --- CENTER ---
     "hyprland/workspaces": {
