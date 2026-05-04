@@ -17,7 +17,7 @@
         "hyprland/submap",
         "privacy",
         "tray",
-        "custom/stats", // NEW: Microchip Hover-Only Stats
+        "custom/keyboard-layout",
         "backlight",
         "pulseaudio",
         "battery",
@@ -41,15 +41,13 @@
         "tooltip-format": "<tt><small>{calendar}</small></tt>"
     },
 
-    // THE HOVER STATS
-    "custom/stats": {
-        "format": "",
-        "tooltip": true,
+    "custom/keyboard-layout": {
+        "exec": "~/.config/hypr/scripts/KeyboardLayout.sh status",
         "interval": 2,
-        "exec": "echo '{\"text\": \"\", \"tooltip\": \"CPU: '\"$(top -bn1 | grep 'Cpu(s)' | awk '{print 100 - $8}')\"'%\\nRAM: '\"$(free -m | awk '/Mem:/ { printf(\"%3.1f%%\", $3/$2*100) }')\"'\\nTEMP: '\"$(sensors | grep 'Tdie' | awk '{print $4}')\"'\"}'",
-        "return-type": "json",
-        "on-click": "gnome-system-monitor"
+        "format": "  {}",
+        "tooltip-format": "Layout: {}\nAlt+Shift to switch"
     },
+
 
     // BATTERY: Wattage removed
     "battery": {
