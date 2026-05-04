@@ -31,7 +31,8 @@ sudo pacman -S --needed --noconfirm \
     nodejs npm eza \
     fzf lazygit neovim go \
     zoxide starship kitty \
-    tmux git-crypt
+    tmux git-crypt \
+    jdk-openjdk jdk21-openjdk maven 
 
 # AUR packages (vivid not in main repos)
 yay -S --needed --noconfirm vivid

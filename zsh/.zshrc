@@ -201,19 +201,9 @@ node() { lazy_load_nvm node "$@"; }
 npm() { lazy_load_nvm npm "$@"; }
 npx() { lazy_load_nvm npx "$@"; }
 
-# Lazy Load SDKMAN
-# Similar concept for SDKMAN
-export SDKMAN_DIR="$HOME/.sdkman"
-lazy_load_sdkman() {
-  unset -f sdk java javac mvn 
-  [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-  "$@"
-}
-# Define the triggers
-sdk() { lazy_load_sdkman sdk "$@"; }
-java() { lazy_load_sdkman java "$@"; }
-javac() { lazy_load_sdkman javac "$@"; }
-mvn() { lazy_load_sdkman mvn "$@"; }
+# --- Arch Linux Native Java Setup ---
+# This automatically points to whatever Java version you select via archlinux-java
+export JAVA_HOME="/usr/lib/jvm/default"
 
 ### -------------------------------------------------------------------------
 ### 7. ALIASES & TOOLS
