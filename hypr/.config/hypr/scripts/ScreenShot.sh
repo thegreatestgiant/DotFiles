@@ -7,6 +7,7 @@ time=$(date "+%d-%b_%H-%M-%S")
 PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || echo "$HOME/Pictures")"
 dir="$HOME/Pictures/Screenshots"
 file="Screenshot_${time}_${RANDOM}.png"
+tmpfile=""
 
 iDIR="$HOME/.config/hypr/swaync/icons"
 iDoR="$HOME/.config/hypr/swaync/images"
@@ -41,14 +42,15 @@ notify_view() {
         fi
 
     elif [[ "$1" == "swappy" ]]; then
+        local swappy_file="$2"
         "${sDIR}/Sounds.sh" --screenshot
         resp=$(${notify_cmd_shot} " Screenshot:" " Captured by Swappy")
         case "$resp" in
         action1)
-            swappy -f - <"$tmpfile"
+            swappy -f "$swappy_file"
             ;;
         action2)
-            rm "$tmpfile"
+            rm "$swappy_file"
             ;;
         esac
 
@@ -133,10 +135,9 @@ shotswappy() {
     tmpfile=$(mktemp)
     grim -g "$(slurp)" - >"$tmpfile"
 
-    # Copy without saving
     if [[ -s "$tmpfile" ]]; then
         wl-copy <"$tmpfile"
-        notify_view "swappy"
+        notify_view "swappy" "$tmpfile"
     fi
 }
 
