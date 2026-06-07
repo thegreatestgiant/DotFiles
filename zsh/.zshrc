@@ -261,7 +261,7 @@ alias pin='paru -Slq | fzf --multi --preview "paru -Si {1}" | xargs -ro paru -S'
 # NVIM as default editor
 export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
-
+export UV_LINK_MODE=copy
 # Add custom path
 # Add Node global binaries explicitly so they work without triggering NVM
 export PATH="/usr/local/go/bin:$HOME/go/bin:$HOME/.nvm/versions/node/v22.22.0/bin:/opt/nvim-linux-x86_64/bin:$HOME/.local/bin:$PATH"
@@ -275,4 +275,3 @@ fi
 ### 8. PROMPT (Starship)
 ### -------------------------------------------------------------------------
 eval "$(starship init zsh)"
-
