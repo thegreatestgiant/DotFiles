@@ -5,13 +5,13 @@
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [user]
-	signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHNFxadjC9XcnahGu65TMNt8Gc+DVX/yFe3fwDbcEpOy"
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDPkZaE/wCCVOkGN0D4Ev0ikUvgNBnNW+457iw55Gzlp
 	email = seanalter1@gmail.com
 	name = Sean Alter
 [gpg]
-        format = ssh
+	format = ssh
 [commit]
-        gpgsign = true
+	gpgsign = true
 [gpg "ssh"]
 	allowedSignersFile = /home/sean/.ssh/allowed_signers
 [url "git@github.com:"]
