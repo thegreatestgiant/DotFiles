@@ -142,7 +142,7 @@ fi
 echo "🔗 Stowing..."
 
 # Backup conflicts
-for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux"; do
+for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux" ".config/starship.toml"; do
     if [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
         mv "$HOME/$file" "$HOME/$file.bak"
     fi
