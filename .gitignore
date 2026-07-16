@@ -18,3 +18,11 @@ tmux/.config/tmux/plugins/*
 # Ignore wallpaper state files
 .current_wallpaper
 .wallpaper_current
+
+# Wallust-generated theme files (regenerated per-wallpaper, not source config)
+hypr/.config/hypr/wallust/wallust-hyprland.conf
+hypr/.config/hypr/rofi/wallust/*
+!hypr/.config/hypr/rofi/wallust/.gitkeep
+hypr/.config/hypr/waybar/wallust/*
+!hypr/.config/hypr/waybar/wallust/.gitkeep
+hypr/.config/hypr/cava/config

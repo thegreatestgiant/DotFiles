@@ -275,3 +275,7 @@ fi
 ### 8. PROMPT (Starship)
 ### -------------------------------------------------------------------------
 eval "$(starship init zsh)"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/sean/.local/bin:$PATH"

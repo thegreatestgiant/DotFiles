@@ -147,3 +147,7 @@ export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To
 if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
     source "$HOME/.ssh/ssh-agent-bridge-bit.sh"
 fi
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/sean/.local/bin:$PATH"
