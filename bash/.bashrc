@@ -118,13 +118,13 @@ fi
 alias i='sudo apt install -y'
 alias cd..='cd ..'
 alias ip='curl icanhazip.com'
-alias ls='ls --color=auto -h'
+
 alias zupdate='sudo apt update && sudo apt upgrade -y'
 HISTTIMEFORMAT='%Y-%m-%d %T'
 
 eval "$(starship init bash)"
 
-#C-l clears/redraws the screen, I don't want it because of nvim
+
 
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
@@ -136,12 +136,12 @@ export NVM_DIR="$HOME/.nvm"
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-bind -x '"\C-l":clear'
 
-export CLASSPATH=$CLASSPATH:"/home/sean/Intro To Comp Sci/":"/home/sean/Intro To Comp Sci/edu.yu.cs.intro.hw6ShiurStats/src/main/java/"
+
+export CLASSPATH="$CLASSPATH:/home/sean/Intro To Comp Sci/:/home/sean/Intro To Comp Sci/edu.yu.cs.intro.hw6ShiurStats/src/main/java/"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # SSH Agent Bridge (Bitwarden/WSL)
 if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then

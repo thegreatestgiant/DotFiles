@@ -49,16 +49,6 @@ zinit snippet OMZP::sudo
 zinit ice wait lucid
 zinit light wfxr/forgit
 
-# -- EMOJI PLUGIN --
-# 1. Disable default bind
-export EMOJI_FZF_NO_BIND=1
-
-# 2. Load Synchronously (Remove 'wait' to ensure function exists)
-zinit light pschmitt/emoji-fzf.zsh
-
-# 3. Bind Keys (Now safe to do directly)
-bindkey -M viins '^xe' emoji-fzf
-bindkey -M vicmd 'E' emoji-fzf
 
 ### -------------------------------------------------------------------------
 ### 3. BASIC CONFIGURATION & HISTORY
@@ -72,7 +62,6 @@ HISTDUP=erase
 setopt EXTENDED_HISTORY          # Write timestamps to history
 setopt SHARE_HISTORY             # Share history between terminals
 setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicates first when trimming history
-setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
 setopt HIST_IGNORE_SPACE          
 setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
 setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
@@ -111,13 +100,6 @@ bindkey -M vicmd 'v' edit-command-line
 ### -------------------------------------------------------------------------
 ### 5. COMPLETION & PREVIEWS (Strict & Complete)
 ### -------------------------------------------------------------------------
-# Load completions
-zinit ice wait lucid blockf
-zinit light zsh-users/zsh-completions
-
-# Load FZF-TAB
-zinit ice wait lucid
-zinit light aloxaf/fzf-tab
 
 # -- CONFIGURATION --
 # 1. Colors
@@ -234,7 +216,6 @@ bindkey . rationalise-dot
 # --icons: show icons
 # --group-directories-first: folders on top
 # --git: show git status symbols
-alias c='wl-copy'
 alias v='wl-paste'
 
 alias ls='eza --icons --group-directories-first --git'
@@ -258,13 +239,15 @@ alias orphans='sudo pacman -Rns $(pacman -Qtdq)'                  # Finds and de
 # The Power User FZF Installer
 alias pin='paru -Slq | fzf --multi --preview "paru -Si {1}" | xargs -ro paru -S'
 
+alias W='wl-copy'
+
 # NVIM as default editor
 export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 export UV_LINK_MODE=copy
 # Add custom path
 # Add Node global binaries explicitly so they work without triggering NVM
-export PATH="/usr/local/go/bin:$HOME/go/bin:$HOME/.nvm/versions/node/v22.22.0/bin:/opt/nvim-linux-x86_64/bin:$HOME/.local/bin:$PATH"
+export PATH="/usr/local/go/bin:$HOME/go/bin:/opt/nvim-linux-x86_64/bin:$HOME/.local/bin:$PATH"
   
 # SSH Agent Bridge (Bitwarden/WSL)
 if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
@@ -276,6 +259,3 @@ fi
 ### -------------------------------------------------------------------------
 eval "$(starship init zsh)"
 
-
-# Added by Antigravity CLI installer
-export PATH="/home/sean/.local/bin:$PATH"
