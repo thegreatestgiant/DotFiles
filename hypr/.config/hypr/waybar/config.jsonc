@@ -17,6 +17,7 @@
         "hyprland/submap",
         "privacy",
         "tray",
+        "custom/stats", 
         "custom/keyboard-layout",
         "backlight",
         "pulseaudio",
@@ -24,6 +25,13 @@
         "clock",
         "custom/power" 
     ],
+
+    "custom/keyboard-layout": {
+        "exec": "~/.config/hypr/scripts/KeyboardLayout.sh status",
+        "interval": 2,
+        "format": "  {}",
+        "tooltip-format": "Layout: {}\nAlt+Shift to switch"
+    },
 
     // --- CENTER ---
     "hyprland/workspaces": {

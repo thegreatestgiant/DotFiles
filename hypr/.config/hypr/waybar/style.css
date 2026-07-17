@@ -13,7 +13,9 @@
 window#waybar {
   background: transparent; /* Makes the main bar invisible */
 }
-
+#custom-keyboard-layout {
+  color: #cba6f7;
+} /* Purple, like stats */
 /* --- THE "PILLS" (Left, Center, Right modules) --- */
 .modules-left,
 .modules-center,
