@@ -16,6 +16,7 @@ button {
     background-position: center;
     background-size: 20%;
     background-color: transparent;
+    color: @foreground;
     transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), background-color 0.2s ease-in-out;
     border-radius: 80px;
     border: none;
@@ -44,6 +45,11 @@ button:hover {
 /* Adjust the size of the icon or content inside the button */
 button span {
     font-size: 1.2em; /* Increase the font size */
+    color: @foreground;
+}
+
+button label {
+    color: @foreground;
 }
 
 
