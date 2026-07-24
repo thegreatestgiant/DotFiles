@@ -25,7 +25,7 @@ export SWWW_TRANSITION_TYPE=simple
 INTERVAL=1800
 
 while true; do
-    find "$1" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
+    find -L "$1" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
         -o -iname "*.gif" -o -iname "*.webp" -o -iname "*.bmp" \
         -o -iname "*.tiff" -o -iname "*.pnm" -o -iname "*.tga" \) |
         while read -r img; do
@@ -33,7 +33,7 @@ while true; do
         done |
         sort -n | cut -d':' -f2- |
         while read -r img; do
-            awww img -o $focused_monitor "$img"
+            awww img "$img"
             # Regenerate colors from the exact image path to avoid cache races
             $HOME/.config/hypr/scripts/WallustAwww.sh "$img"
             # Refresh UI components that depend on wallust output
