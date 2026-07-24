@@ -51,7 +51,7 @@ GDK_BACKEND=$BACKEND yad \
     "Shift + Super + H/J/K/L" "Move Window (Throw)" "movewindow" \
     "" "" "" \
     "<b>💥 MODAL MODES</b>" "" "" \
-    "Super + R" "Resize Mode (H/J/K/L)" "submap resize" \
+    "Super + R" "Resize Mode (H/J/K/L, +/- GTK Scale)" "submap resize" \
     "Super + D" "Move Mode (H/J/K/L + 1-0)" "submap move" \
     "" "" "" \
     "<b>🟣 SYSTEM And MEDIA</b>" "" "" \
