@@ -15,19 +15,19 @@ button {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 20%;
-    background-color: rgba(200, 220, 255, 0);
-    animation: gradient_f 10s ease-in infinite;
-    transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    background-color: transparent;
+    transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), background-color 0.2s ease-in-out;
     border-radius: 80px;
-	border:0px;
-	outline-style: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 button:focus {
     background-size: 50%;
-	border: 0px;
-	outline-style: none;
-
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 button:hover {
@@ -36,8 +36,9 @@ button:hover {
     background-size: 50%;
     margin: 30px;
     border-radius: 80px;
-    outline-style: none;
-	
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 /* Adjust the size of the icon or content inside the button */
