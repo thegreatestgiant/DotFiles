@@ -8,8 +8,8 @@ SCRIPTSDIR="$HOME/.config/hypr/scripts"
 
 focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
 
-PICS=($(find -L "${wallDIR}" -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.pnm" -o -name "*.tga" -o -name "*.tiff" -o -name "*.webp" -o -name "*.bmp" -o -name "*.farbfeld" -o -name "*.gif" \)))
-RANDOMPICS=${PICS[ $RANDOM % ${#PICS[@]} ]}
+mapfile -d '' PICS < <(find -L "${wallDIR}" -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.pnm" -o -name "*.tga" -o -name "*.tiff" -o -name "*.webp" -o -name "*.bmp" -o -name "*.farbfeld" -o -name "*.gif" \) -print0)
+RANDOMPICS="${PICS[ $RANDOM % ${#PICS[@]} ]}"
 
 
 # Transition config
@@ -20,10 +20,10 @@ BEZIER=".43,1.19,1,.4"
 SWWW_PARAMS="--transition-fps $FPS --transition-type $TYPE --transition-duration $DURATION --transition-bezier $BEZIER"
 
 
-awww query || awww-daemon --format xrgb && awww img -o $focused_monitor ${RANDOMPICS} $SWWW_PARAMS
+awww query || awww-daemon --format xrgb && awww img -o "$focused_monitor" "${RANDOMPICS}" $SWWW_PARAMS
 
 wait $!
-"$SCRIPTSDIR/WallustAwww.sh" &&
+"$SCRIPTSDIR/WallustAwww.sh" "${RANDOMPICS}" &&
 
 wait $!
 sleep 2

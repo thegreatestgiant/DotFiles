@@ -183,9 +183,12 @@ node() { lazy_load_nvm node "$@"; }
 npm() { lazy_load_nvm npm "$@"; }
 npx() { lazy_load_nvm npx "$@"; }
 
-# --- Arch Linux Native Java Setup ---
-# This automatically points to whatever Java version you select via archlinux-java
-export JAVA_HOME="/usr/lib/jvm/default"
+# --- Cross-Platform Java Setup ---
+if [ -d "/usr/lib/jvm/default" ]; then
+  export JAVA_HOME="/usr/lib/jvm/default" # Arch
+elif [ -d "/usr/lib/jvm/default-java" ]; then
+  export JAVA_HOME="/usr/lib/jvm/default-java" # Ubuntu
+fi
 
 ### -------------------------------------------------------------------------
 ### 7. ALIASES & TOOLS
