@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
+export PATH="$HOME/.local/bin:$PATH"
 # This script for selecting wallpapers (SUPER W)
 
 # WALLPAPERS PATH
@@ -105,12 +106,13 @@ apply_image_wallpaper() {
 
     kill_wallpaper_for_image
 
-    if ! pgrep -x "awww-daemon" >/dev/null; then
+    if ! pgrep "awww-daemon" >/dev/null; then
         echo "Starting awww-daemon..."
-        awww-daemon --format xrgb &
+        awww-daemon &
+        sleep 1
     fi
 
-    awww img -o "$focused_monitor" "$image_path" $SWWW_PARAMS
+    awww img "$image_path" $SWWW_PARAMS
 
     # Run additional scripts (pass the image path to avoid cache race conditions)
     "$SCRIPTSDIR/WallustAwww.sh" "$image_path"
