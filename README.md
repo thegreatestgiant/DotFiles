@@ -1,8 +1,9 @@
-# ⚡️ Dotfiles
+# ⚡️ Dotfiles (Unified Edition)
 
-> My personal development environment, managed with **GNU Stow**,
-> encrypted with **Git-Crypt**, and componentized with **Submodules**.
+> My cross-platform development environment for **Arch Linux** and **Ubuntu**, managed with **GNU Stow**, encrypted with **Git-Crypt**, and componentized with **Submodules**.
 
+[![Arch Linux](https://img.shields.io/badge/OS-Arch_Linux-1793D1?style=flat&logo=arch-linux&logoColor=white)](https://archlinux.org/)
+[![Ubuntu](https://img.shields.io/badge/OS-Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 [![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.dev)
 
 ## 🏗 Architecture
@@ -23,7 +24,6 @@ Stow generates symlinks relative to the parent (`~`).
 | **Kitty** | `.config/kitty` | Terminal emulator configuration |
 | **Git** | `.gitconfig` | Version control settings |
 | **SSH** | `.ssh/config` | SSH Config (Encrypted) |
-| **GitHub** | `.config/gh` | REMOVED GH CLI config (Encrypted) REMOVED |
 
 ### 🔐 Security (Git-Crypt)
 
@@ -35,11 +35,11 @@ We use symmetric encryption for sensitive configuration.
 
 ## 🚀 Installation
 
-### Option A: Automatic (Recommended)
+### Option A: Interactive Setup (Full Install)
 
-This repo includes a `setup.sh` script that installs dependencies (Nvim, Zsh, FZF, etc.), handles encryption keys, and stows your config.
+This method uses an interactive script powered by **Gum** to handle OS detection, package installation, decryption, and stowing. It officially supports **Arch Linux** and **Ubuntu/Debian**.
 
-#### 1. **Clone & Run:**
+#### 1. Clone & Run
 
 ```bash
 git clone --recurse-submodules https://github.com/thegreatestgiant/dotfiles.git ~/.files
@@ -48,11 +48,18 @@ chmod +x setup.sh
 ./setup.sh 
 ```
 
-#### 2. **Unlock Secrets**
+#### 2. Follow the Interactive Prompts
 
-Ensure you have your dotfiles_key.key in your home folder or Downloads, and the script will automatically unlock it.
+The script will automatically:
+1. Detect your OS and install the necessary dependencies (via `pacman`/`yay` or `apt`).
+2. Unlock your secrets (ensure `dotfiles_key.key` is present in `~/` or `~/Downloads/`).
+3. Present an interactive menu to select exactly which components you want to stow.
 
-### Option B: Manual
+*Note: If you have existing configuration files, the script will automatically back them up with a `.bak` extension before applying the new symlinks.*
+
+### Option B: Manual Setup (Minimal/Server)
+
+If you're on a server or just want a minimal terminal environment without the heavy GUI dependencies (like Hyprland), you can bypass the setup script.
 
 #### 1. Clone
 
@@ -61,24 +68,19 @@ git clone --recurse-submodules https://github.com/thegreatestgiant/dotfiles.git 
 cd ~/.files
 ```
 
-#### 2. Unlock Secrets
+#### 2. Unlock Secrets (Optional)
 
-Place your dotfiles_key.key in a secure location (e.g. ~/Downloads/) and run:
+If you need access to your encrypted files (like your SSH config), unlock them now:
 
-```Bash
-git-crypt unlock ~/Downloads/dotfiles_key.key
+```bash
+git-crypt unlock /path/to/your/dotfiles_key.key
 ```
 
-#### 3. Stow Packages
+#### 3. Manually Stow Components
 
-Use Stow to link your packages:
+Simply use GNU Stow for the specific packages you want:
 
-stow bash zsh nvim tmux starship git ssh
-
-# Desktop only — uncomment on machines with Hyprland
-# NOTE: wallust-generated files (colors-rofi.rasi, colors-waybar.css,
-#       wallust-hyprland.conf etc.) won't exist until first wallpaper change.
-#       This is expected — they are gitignored on purpose.
-# NOTE: if ~/Pictures/wallpapers is a symlink, WallpaperSelect.sh requires
-#       find -L to resolve it — see WallpaperSelect.sh line ~115.
-# stow hypr kitty rclone
+```bash
+# Example: Only stow terminal essentials
+stow bash zsh nvim tmux starship
+```
