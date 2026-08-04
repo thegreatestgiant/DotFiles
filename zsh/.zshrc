@@ -237,6 +237,7 @@ alias grep='grep --color=auto'
 if command -v paru &> /dev/null; then
     # Arch / CachyOS (paru)
     alias i='paru -S --noconfirm'
+    alias r='paru -Rns'
     alias zupdate='paru -Syu'
     alias cleanup='paru -Scc'                                         
     alias orphans='sudo pacman -Rns $(pacman -Qtdq)'                  
@@ -244,6 +245,7 @@ if command -v paru &> /dev/null; then
 elif command -v apt-get &> /dev/null; then
     # Ubuntu / WSL (apt)
     alias i='sudo apt install -y'
+    alias r='sudo apt remove -y'
     alias zupdate='sudo apt update && sudo apt upgrade -y'
     alias cleanup='sudo apt autoremove -y && sudo apt clean'
     alias orphans='sudo apt autoremove -y'

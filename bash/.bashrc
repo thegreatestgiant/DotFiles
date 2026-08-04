@@ -116,6 +116,7 @@ if ! shopt -oq posix; then
 fi
 
 alias i='sudo apt install -y'
+alias r='sudo apt remove -y'
 alias cd..='cd ..'
 alias ip='curl icanhazip.com'
 
