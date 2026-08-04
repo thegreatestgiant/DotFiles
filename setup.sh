@@ -42,7 +42,7 @@ sudo apt update
 echo "📦 Installing system packages..."
 sudo apt install -y git stow zsh build-essential unzip \
     ripgrep fd-find xclip python3-venv \
-    nodejs npm eza ncurses-term
+    nodejs npm eza ncurses-term pinentry-tty
 # gh
 
 # 'fd' fix for Ubuntu
@@ -123,6 +123,19 @@ if ! command -v go &>/dev/null; then
     # NOTE: Your zsh/.zshrc already has /usr/local/go/bin in the PATH, so it will work on reboot!
 fi
 
+# 5.2 Install rbw (Latest from GitHub)
+# ----------------------------------------------------------------------
+if ! command -v rbw &>/dev/null; then
+    echo "🔐 Installing rbw (Latest)..."
+    # Scrape the official github release for the latest version tag
+    RBW_TAG=$(curl -s "https://api.github.com/repos/doy/rbw/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
+    
+    # Download and install the latest deb package
+    wget -qO rbw.deb "https://git.tozt.net/rbw/releases/deb/rbw_${RBW_TAG}_amd64.deb"
+    sudo dpkg -i rbw.deb
+    rm rbw.deb
+fi
+
 # 6. Clone & Unlock
 # ----------------------------------------------------------------------
 if [ ! -d "$DOTFILES_DIR" ]; then
@@ -148,7 +161,13 @@ for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux" ".config/starship.t
     fi
 done
 
-stow bash zsh nvim tmux starship git ssh
+stow bash zsh nvim tmux starship git ssh rclone
+
+# Install systemd user services
+echo "⚙️ Installing systemd user services..."
+mkdir -p "$HOME/.config/systemd/user/"
+find . -maxdepth 1 -name "*.service" -exec cp {} "$HOME/.config/systemd/user/" \;
+systemctl --user daemon-reload 2>/dev/null || true
 
 # 7.5 Install Zoxide (Latest via Script)
 # ----------------------------------------------------------------------

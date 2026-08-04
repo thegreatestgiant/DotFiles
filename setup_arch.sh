@@ -32,7 +32,8 @@ sudo pacman -S --needed --noconfirm \
     fzf lazygit neovim go \
     zoxide starship kitty \
     tmux git-crypt \
-    jdk-openjdk jdk21-openjdk maven 
+    jdk-openjdk jdk21-openjdk maven \
+    rbw pinentry 
 
 # AUR packages (vivid not in main repos)
 yay -S --needed --noconfirm vivid
@@ -58,7 +59,13 @@ for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux" ".config/hypr" ".co
     fi
 done
 
-stow bash zsh nvim tmux starship git ssh hypr kitty
+stow bash zsh nvim tmux starship git ssh hypr kitty rclone
+
+# Install systemd user services
+echo "⚙️ Installing systemd user services..."
+mkdir -p "$HOME/.config/systemd/user/"
+find . -maxdepth 1 -name "*.service" -exec cp {} "$HOME/.config/systemd/user/" \;
+systemctl --user daemon-reload 2>/dev/null || true
 
 # 5. Set default shell to zsh
 # ----------------------------------------------------------------------
