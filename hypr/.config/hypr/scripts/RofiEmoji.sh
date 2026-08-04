@@ -1,16 +1,7 @@
 #!/bin/bash
+export PATH="$HOME/.local/bin:$PATH"
 
-# 1. Open rofimoji and capture the chosen emoji
-# Using '--action print' so it simply outputs the result instead of typing or copying
-chosen=$(rofimoji --action print --selector-args="-config $HOME/.config/hypr/rofi/config-emoji.rasi")
-
-# 2. Exit cleanly if nothing was selected (e.g., you pressed Escape)
-if [ -z "$chosen" ]; then
-    exit 0
-fi
-
-# 3. Wait for Rofi to close and the window underneath to regain focus
+# Natively run rofimoji. Do not capture stdout as it breaks Wayland surface creation on some setups.
+rofimoji --action copy --selector rofi --selector-args="-config $HOME/.config/hypr/rofi/config-emoji.rasi"
 sleep 0.3
-
-# 4. Type the emoji directly into the active window
-wtype "$chosen"
+wtype "$(wl-paste)"

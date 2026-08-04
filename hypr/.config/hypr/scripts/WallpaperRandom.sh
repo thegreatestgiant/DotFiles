@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
+# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
+export PATH="$HOME/.local/bin:$PATH"  ##
 # Script for Random Wallpaper ( CTRL ALT W)
 
 PICTURES_DIR="$(xdg-user-dir PICTURES 2>/dev/null || echo "$HOME/Pictures")"
@@ -20,7 +21,11 @@ BEZIER=".43,1.19,1,.4"
 SWWW_PARAMS="--transition-fps $FPS --transition-type $TYPE --transition-duration $DURATION --transition-bezier $BEZIER"
 
 
-awww query || awww-daemon --format xrgb && awww img -o "$focused_monitor" "${RANDOMPICS}" $SWWW_PARAMS
+if ! awww query >/dev/null 2>&1; then
+    awww-daemon &
+    sleep 1
+fi
+awww img "${RANDOMPICS}" $SWWW_PARAMS
 
 wait $!
 "$SCRIPTSDIR/WallustAwww.sh" "${RANDOMPICS}" &&
