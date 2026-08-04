@@ -87,7 +87,8 @@ elif is_ubuntu; then
     echo "📦 Installing system packages..."
     sudo apt install -y git stow zsh build-essential unzip \
         ripgrep fd-find xclip python3-venv \
-        nodejs npm eza ncurses-term pinentry-tty gum
+        nodejs npm eza ncurses-term pinentry-tty gum \
+        wtype rofimoji cargo liblz4-dev libdav1d-dev
 
     # 'fd' fix for Ubuntu
     if ! command -v fd &>/dev/null; then
@@ -110,6 +111,16 @@ elif is_ubuntu; then
         echo "🔍 Installing FZF..."
         git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
         ~/.fzf/install --all
+    fi
+
+    # Install awww (Wallpaper daemon)
+    if ! command -v awww &>/dev/null; then
+        echo "🖼️ Installing awww (Wallpaper daemon)..."
+        cargo install --git https://codeberg.org/LGFae/awww.git
+        mkdir -p ~/.local/bin
+        ln -sf ~/.cargo/bin/awww ~/.local/bin/awww
+        ln -sf ~/.cargo/bin/awww-daemon ~/.local/bin/awww-daemon
+        ln -sf ~/.cargo/bin/awww-clear ~/.local/bin/awww-clear
     fi
 
     # Install Lazygit
