@@ -2,11 +2,9 @@
 set -e
 
 # ----------------------------------------------------------------------
-# ⚡️ Dotfiles Bootstrap Script (Dynamic Edition)
+# ⚡️ Dotfiles Bootstrap Script (Unified Edition)
 # ----------------------------------------------------------------------
-export DEBIAN_FRONTEND=noninteractive
 export TZ="America/New_York"
-ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
 
 DOTFILES_DIR="$HOME/.files"
 REPO_URL="https://github.com/thegreatestgiant/dotfiles.git"
@@ -14,129 +12,164 @@ KEY_PATH="$HOME/dotfiles_key.key"
 
 echo "🚀 Starting System Bootstrap..."
 
-# 1. Prepare Apt Repositories
+# 1. OS Detection
 # ----------------------------------------------------------------------
-echo "🔑 Setting up repositories..."
-sudo apt update
-sudo apt install -y wget gpg curl
-
-# Add Eza Repo (Dynamic fetch not possible for apt source, using stable)
-if ! command -v eza &>/dev/null; then
-    sudo mkdir -p /etc/apt/keyrings
-    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg --yes
-    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list >/dev/null
-    sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS=$ID
+    OS_LIKE=$ID_LIKE
+else
+    echo "Could not detect OS. Exiting."
+    exit 1
 fi
 
-# Add GitHub CLI Repo
-# if ! command -v gh &>/dev/null; then
-#     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
-#         sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&
-#         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
-# fi
+is_arch() {
+    [[ "$OS" == "arch" || "$OS_LIKE" == *"arch"* ]]
+}
 
-sudo apt update
+is_ubuntu() {
+    [[ "$OS" == "ubuntu" || "$OS" == "debian" || "$OS_LIKE" == *"debian"* ]]
+}
 
-# 2. Install Packages
+# 2. Package Installation & Dependencies
 # ----------------------------------------------------------------------
-echo "📦 Installing system packages..."
-sudo apt install -y git stow zsh build-essential unzip \
-    ripgrep fd-find xclip python3-venv \
-    nodejs npm eza ncurses-term pinentry-tty
-# gh
-
-# 'fd' fix for Ubuntu
-if ! command -v fd &>/dev/null; then
-    mkdir -p ~/.local/bin
-    # Added -f to force overwrite if it already exists
-    ln -sf $(which fdfind) ~/.local/bin/fd
-fi
-
-# 3. Install Vivid (Latest from GitHub)
-# ----------------------------------------------------------------------
-if ! command -v vivid &>/dev/null; then
-    echo "🎨 Installing Vivid (Latest)..."
-    # Fetch latest tag name (e.g., v0.10.1)
-    VIVID_TAG=$(curl -s "https://api.github.com/repos/sharkdp/vivid/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
-
-    # Strip the 'v' prefix for the Debian filename (results in 0.10.1)
-    VIVID_VERSION="${VIVID_TAG#v}"
-
-    # Download using the tag for the URL, and the stripped version for the file
-    wget "https://github.com/sharkdp/vivid/releases/download/${VIVID_TAG}/vivid_${VIVID_VERSION}_amd64.deb"
-    sudo dpkg -i "vivid_${VIVID_VERSION}_amd64.deb"
-    rm "vivid_${VIVID_VERSION}_amd64.deb"
-fi
-
-# 4. Install FZF & Lazygit (Latest)
-# ----------------------------------------------------------------------
-if [ ! -d "$HOME/.fzf" ]; then
-    echo "🔍 Installing FZF..."
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --all
-fi
-
-if ! command -v lazygit &>/dev/null; then
-    echo "💤 Installing Lazygit (Latest)..."
-    LG_TAG=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LG_TAG}_Linux_x86_64.tar.gz"
-    tar xf lazygit.tar.gz lazygit
-    sudo install lazygit /usr/local/bin
-    rm lazygit.tar.gz lazygit
-fi
-
-# 5. Install Neovim (Latest Stable)
-# ----------------------------------------------------------------------
-if ! command -v nvim &>/dev/null; then
-    echo "📝 Installing Neovim..."
-
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-    sudo rm -rf /opt/nvim-linux-x86_64
-    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-
-    # Add to PATH (updating the folder name)
-    export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-    if ! grep -q "/opt/nvim-linux-x86_64/bin" "$HOME/.bashrc"; then
-        echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >>"$HOME/.bashrc"
+if is_arch; then
+    echo "Distro: Arch Linux / CachyOS"
+    
+    if ! command -v yay &>/dev/null; then
+        echo "📦 Installing yay..."
+        sudo pacman -S --needed --noconfirm git base-devel
+        git clone https://aur.archlinux.org/yay.git /tmp/yay
+        cd /tmp/yay
+        makepkg -si --noconfirm
+        cd ~
     fi
 
-    rm nvim-linux-x86_64.tar.gz
+    echo "📦 Installing system packages..."
+    sudo pacman -S --needed --noconfirm \
+        git stow zsh base-devel unzip \
+        ripgrep fd xclip python \
+        nodejs npm eza \
+        fzf lazygit neovim go \
+        zoxide starship kitty \
+        tmux git-crypt \
+        jdk-openjdk jdk21-openjdk maven \
+        rbw pinentry gum 
+
+    # AUR packages
+    yay -S --needed --noconfirm vivid
+
+elif is_ubuntu; then
+    echo "Distro: Ubuntu / Debian"
+    export DEBIAN_FRONTEND=noninteractive
+    sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ | sudo tee /etc/timezone >/dev/null
+
+    echo "🔑 Setting up repositories..."
+    sudo apt update
+    sudo apt install -y wget gpg curl
+
+    # Add Eza Repo
+    if ! command -v eza &>/dev/null; then
+        sudo mkdir -p /etc/apt/keyrings
+        wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg --yes
+        echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list >/dev/null
+    fi
+
+    # Add Charm Repo for Gum
+    if ! command -v gum &>/dev/null; then
+        sudo mkdir -p /etc/apt/keyrings
+        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg --yes
+        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list >/dev/null
+    fi
+
+    sudo apt update
+
+    echo "📦 Installing system packages..."
+    sudo apt install -y git stow zsh build-essential unzip \
+        ripgrep fd-find xclip python3-venv \
+        nodejs npm eza ncurses-term pinentry-tty gum
+
+    # 'fd' fix for Ubuntu
+    if ! command -v fd &>/dev/null; then
+        mkdir -p ~/.local/bin
+        ln -sf $(which fdfind) ~/.local/bin/fd
+    fi
+
+    # Install Vivid
+    if ! command -v vivid &>/dev/null; then
+        echo "🎨 Installing Vivid (Latest)..."
+        VIVID_TAG=$(curl -s "https://api.github.com/repos/sharkdp/vivid/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
+        VIVID_VERSION="${VIVID_TAG#v}"
+        wget "https://github.com/sharkdp/vivid/releases/download/${VIVID_TAG}/vivid_${VIVID_VERSION}_amd64.deb" -O vivid.deb
+        sudo dpkg -i vivid.deb
+        rm vivid.deb
+    fi
+
+    # Install FZF
+    if [ ! -d "$HOME/.fzf" ]; then
+        echo "🔍 Installing FZF..."
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        ~/.fzf/install --all
+    fi
+
+    # Install Lazygit
+    if ! command -v lazygit &>/dev/null; then
+        echo "💤 Installing Lazygit (Latest)..."
+        LG_TAG=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LG_TAG}_Linux_x86_64.tar.gz"
+        tar xf lazygit.tar.gz lazygit
+        sudo install lazygit /usr/local/bin
+        rm lazygit.tar.gz lazygit
+    fi
+
+    # Install Neovim
+    if ! command -v nvim &>/dev/null; then
+        echo "📝 Installing Neovim..."
+        curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+        sudo rm -rf /opt/nvim-linux-x86_64
+        sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+        export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+        rm nvim-linux-x86_64.tar.gz
+    fi
+
+    # Install Golang
+    if ! command -v go &>/dev/null; then
+        echo "🐹 Installing Latest Golang..."
+        GO_VERSION=$(curl -sL https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+        wget "https://dl.google.com/go/${GO_VERSION}.linux-amd64.tar.gz" -O go.tar.gz
+        sudo rm -rf /usr/local/go
+        sudo tar -C /usr/local -xzf go.tar.gz
+        rm go.tar.gz
+        rm -rf "${HOME}/go"
+        export PATH="$PATH:/usr/local/go/bin"
+    fi
+
+    # Install rbw
+    if ! command -v rbw &>/dev/null; then
+        echo "🔐 Installing rbw (Latest)..."
+        RBW_TAG=$(curl -s "https://api.github.com/repos/doy/rbw/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
+        wget -qO rbw.deb "https://git.tozt.net/rbw/releases/deb/rbw_${RBW_TAG}_amd64.deb"
+        sudo dpkg -i rbw.deb
+        rm rbw.deb
+    fi
+
+    # Install Zoxide
+    if ! command -v zoxide &>/dev/null; then
+        echo "📂 Installing Zoxide..."
+        curl -sSf https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+        sudo mv ~/.local/bin/zoxide /usr/local/bin/
+    fi
+
+    # Install Starship
+    if ! command -v starship &>/dev/null; then
+        curl -sS https://starship.rs/install.sh | sh -s -- -y
+    fi
+else
+    echo "Unsupported OS."
+    exit 1
 fi
 
-# 5.1 Install Latest Golang
-# ----------------------------------------------------------------------
-if ! command -v go &>/dev/null; then
-    echo "🐹 Installing Latest Golang..."
-    # Scrape the official website for the latest version tag (e.g., go1.24.0)
-    GO_VERSION=$(curl -sL https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
-
-    # Download and extract to /usr/local
-    wget "https://dl.google.com/go/${GO_VERSION}.linux-amd64.tar.gz"
-    sudo rm -rf /usr/local/go
-    sudo tar -C /usr/local -xzf "${GO_VERSION}.linux-amd64.tar.gz"
-    rm "${GO_VERSION}.linux-amd64.tar.gz"
-    rm -rf "${HOME}/go"
-
-    # Add to PATH temporarily for this script
-    export PATH="$PATH:/usr/local/go/bin"
-
-    # NOTE: Your zsh/.zshrc already has /usr/local/go/bin in the PATH, so it will work on reboot!
-fi
-
-# 5.2 Install rbw (Latest from GitHub)
-# ----------------------------------------------------------------------
-if ! command -v rbw &>/dev/null; then
-    echo "🔐 Installing rbw (Latest)..."
-    # Scrape the official github release for the latest version tag
-    RBW_TAG=$(curl -s "https://api.github.com/repos/doy/rbw/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
-    
-    # Download and install the latest deb package
-    wget -qO rbw.deb "https://git.tozt.net/rbw/releases/deb/rbw_${RBW_TAG}_amd64.deb"
-    sudo dpkg -i rbw.deb
-    rm rbw.deb
-fi
-
-# 6. Clone & Unlock
+# 3. Clone & Unlock
 # ----------------------------------------------------------------------
 if [ ! -d "$DOTFILES_DIR" ]; then
     echo "📥 Cloning dotfiles..."
@@ -150,45 +183,67 @@ if [ -d ".git-crypt" ] && [ -f "$KEY_PATH" ]; then
     git-crypt unlock "$KEY_PATH"
 fi
 
-# 7. Stow
+# 4. Interactive Stow via Gum
 # ----------------------------------------------------------------------
-echo "🔗 Stowing..."
+echo "🔗 Selecting configs to stow..."
 
-# Backup conflicts
-for file in ".bashrc" ".zshrc" ".config/nvim" ".config/tmux" ".config/starship.toml"; do
-    if [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
-        mv "$HOME/$file" "$HOME/$file.bak"
-    fi
-done
+# Pre-select based on OS
+if is_arch; then
+    DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone,hypr,kitty"
+else
+    DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone"
+fi
 
-stow bash zsh nvim tmux starship git ssh rclone
+STOW_APPS=$(gum choose --no-limit \
+    --selected "$DEFAULT_SELECTED" \
+    --header "Select which dotfiles to stow (Space to select, Enter to confirm)" \
+    bash zsh nvim tmux starship git ssh rclone hypr kitty)
 
+if [ -z "$STOW_APPS" ]; then
+    echo "No apps selected. Skipping stow."
+else
+    # Convert newline-separated list to array
+    mapfile -t APPS_ARRAY <<< "$STOW_APPS"
+    
+    # Backup conflicts
+    for app in "${APPS_ARRAY[@]}"; do
+        case $app in
+            bash) file=".bashrc" ;;
+            zsh) file=".zshrc" ;;
+            nvim) file=".config/nvim" ;;
+            tmux) file=".config/tmux" ;;
+            starship) file=".config/starship.toml" ;;
+            hypr) file=".config/hypr" ;;
+            kitty) file=".config/kitty" ;;
+            ssh) file=".ssh" ;;
+            rclone) file=".config/rclone" ;;
+            git) file=".gitconfig" ;;
+            *) file="" ;;
+        esac
+        
+        if [ -n "$file" ] && [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
+            echo "  Backing up $file → $file.bak"
+            mv "$HOME/$file" "$HOME/$file.bak"
+        fi
+    done
+    
+    echo "Stowing: ${APPS_ARRAY[*]}"
+    stow "${APPS_ARRAY[@]}"
+fi
+
+# 5. Final Polish
+# ----------------------------------------------------------------------
 # Install systemd user services
 echo "⚙️ Installing systemd user services..."
 mkdir -p "$HOME/.config/systemd/user/"
 find . -maxdepth 1 -name "*.service" -exec cp {} "$HOME/.config/systemd/user/" \;
 systemctl --user daemon-reload 2>/dev/null || true
 
-# 7.5 Install Zoxide (Latest via Script)
-# ----------------------------------------------------------------------
-if ! command -v zoxide &>/dev/null; then
-    echo "📂 Installing Zoxide..."
-    curl -sSf https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-
-    # FIX: Move Zoxide to a globally accessible path
-    sudo mv ~/.local/bin/zoxide /usr/local/bin/
-fi
-
-# 8. Final Polish
-# ----------------------------------------------------------------------
-if ! command -v starship &>/dev/null; then
-    curl -sS https://starship.rs/install.sh | sh -s -- -y
-fi
-
+# Set default shell to zsh
 if [ "$SHELL" != "$(which zsh)" ]; then
     chsh -s $(which zsh)
 fi
 
-# FIX 3: Added clear instructions instead of forcing a shell change
+echo ""
 echo "🎉 All Systems Go!"
 echo "👉 Please restart your terminal or run 'zsh' to load your new environment."
