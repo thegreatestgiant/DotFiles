@@ -230,17 +230,24 @@ alias lt='eza --icons -a --tree --level=2'
 alias llt='eza --icons -a --tree --level=2 -l'
 
 # General Aliases
-alias i='paru -S --noconfirm'
 alias ip='curl icanhazip.com'
-alias zupdate='paru -Syu'
 alias grep='grep --color=auto'
 
-# System Maintenance
-alias cleanup='paru -Scc'                                         # Safely clear out downloaded package files to free up space
-alias orphans='sudo pacman -Rns $(pacman -Qtdq)'                  # Finds and deletes dependencies that no longer belong to any installed app
-
-# The Power User FZF Installer
-alias pin='paru -Slq | fzf --multi --preview "paru -Si {1}" | xargs -ro paru -S'
+# Cross-Platform Package Management (Arch/CachyOS vs Ubuntu/Debian)
+if command -v paru &> /dev/null; then
+    # Arch / CachyOS (paru)
+    alias i='paru -S --noconfirm'
+    alias zupdate='paru -Syu'
+    alias cleanup='paru -Scc'                                         
+    alias orphans='sudo pacman -Rns $(pacman -Qtdq)'                  
+    alias pin='paru -Slq | fzf --multi --preview "paru -Si {1}" | xargs -ro paru -S'
+elif command -v apt-get &> /dev/null; then
+    # Ubuntu / WSL (apt)
+    alias i='sudo apt install -y'
+    alias zupdate='sudo apt update && sudo apt upgrade -y'
+    alias cleanup='sudo apt autoremove -y && sudo apt clean'
+    alias orphans='sudo apt autoremove -y'
+fi
 
 alias W='wl-copy'
 
@@ -252,13 +259,50 @@ export UV_LINK_MODE=copy
 # Add Node global binaries explicitly so they work without triggering NVM
 export PATH="/usr/local/go/bin:$HOME/go/bin:/opt/nvim-linux-x86_64/bin:$HOME/.local/bin:$PATH"
   
-# SSH Agent Bridge (Bitwarden/WSL)
-if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
-    source "$HOME/.ssh/ssh-agent-bridge-bit.sh"
-fi
+# SSH Agent Bridge (Bitwarden/WSL) - DISABLED
+# if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
+#     source "$HOME/.ssh/ssh-agent-bridge-bit.sh"
+# fi
 
 ### -------------------------------------------------------------------------
 ### 8. PROMPT (Starship)
 ### -------------------------------------------------------------------------
 eval "$(starship init zsh)"
+
+### -------------------------------------------------------------------------
+### 9. RBW (Lightning Fast Bitwarden CLI & SSH Agent)
+### -------------------------------------------------------------------------
+# Set the SSH agent socket to point to rbw's background agent
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/rbw/ssh-agent-socket"
+
+# Function to initially set up rbw for self-hosted Bitwarden
+function bw-setup() {
+    echo "--- Setting up rbw for self-hosted Bitwarden ---"
+    echo -n "Enter your self-hosted Bitwarden URL (e.g., https://vault.example.com): "
+    read url
+    if [[ -n "$url" ]]; then
+        rbw config set base_url "$url"
+    fi
+    
+    echo -n "Enter your Bitwarden email address: "
+    read email
+    if [[ -n "$email" ]]; then
+        rbw config set email "$email"
+    fi
+    
+    echo "✅ Configuration saved!"
+    echo "Logging in to your vault... (You will need your Master Password)"
+    rbw login
+    
+    # Also set the timeout so they don't have to worry about it
+    rbw config set lock_timeout 315360000
+    echo "✅ Lock timeout set to 10 years."
+}
+
+# Function to unlock the vault and set an infinite timeout
+function bw-unlock() {
+    # Set the timeout to 10 years so you never have to re-enter it
+    rbw config set lock_timeout 315360000
+    rbw unlock
+}
 
