@@ -26,7 +26,9 @@ if [ ! -f "$HOME/.config/hypr/.initial_startup_done" ]; then
     # Initialize wallust and wallpaper
     if [ -f "$wallpaper" ]; then
         wallust run -s $wallpaper >/dev/null
-        awww query || awww-daemon && $awww $wallpaper $effect
+        awww query || awww-daemon &
+        sleep 1
+        $awww $wallpaper $effect
         "$scriptsDir/WallustAwww.sh" >/dev/null 2>&1 &
     fi
 

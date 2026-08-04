@@ -17,6 +17,11 @@ if [[ $# -lt 1 ]] || [[ ! -d $1 ]]; then
     exit 1
 fi
 
+if ! awww query >/dev/null 2>&1; then
+    awww-daemon &
+    sleep 1
+fi
+
 # Edit below to control the images transition
 export SWWW_TRANSITION_FPS=60
 export SWWW_TRANSITION_TYPE=simple
