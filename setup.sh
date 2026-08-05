@@ -88,7 +88,7 @@ elif is_ubuntu; then
     sudo apt install -y git stow zsh build-essential unzip \
         ripgrep fd-find xclip python3-venv \
         nodejs npm eza ncurses-term pinentry-tty gum \
-        wtype rofimoji cargo liblz4-dev libdav1d-dev pkg-config
+        wtype rofimoji cargo liblz4-dev libdav1d-dev pkg-config wayland-protocols libwayland-dev
 
     # 'fd' fix for Ubuntu
     if ! command -v fd &>/dev/null; then
