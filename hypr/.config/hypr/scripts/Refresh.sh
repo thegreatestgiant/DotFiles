@@ -38,6 +38,9 @@ for pid in $(pidof waybar rofi swaync ags swaybg); do
     sleep 0.1
 done
 
+# Reload Hyprland config
+hyprctl reload
+
 #Restart waybar
 sleep 0.1
 waybar -c ~/.config/hypr/waybar/config.jsonc -s ~/.config/hypr/waybar/style.css &
@@ -48,8 +51,5 @@ swaync -c ~/.config/hypr/swaync/config.json >/dev/null 2>&1 &
 # reload swaync
 swaync-client --reload-config
 
-# Relaunching rainbow borders if the script exists
-~/.config/hypr/scripts/RainbowBorders.sh &
-sleep 1
-
+# Removed RainbowBorders.sh because it is now natively rendered via Borders.lua
 exit 0

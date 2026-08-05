@@ -3,10 +3,10 @@
 # Rofi menu for KooL Hyprland Quick Settings (SUPER SHIFT E)
 
 # Modify this config file for default terminal and EDITOR
-config_file="$HOME/.config/hypr/configs/ENVariables.conf"
+config_file="$HOME/.config/hypr/configs/ENVariables.lua"
 
 tmp_config_file=$(mktemp)
-sed 's/^\$//g; s/ = /=/g' "$config_file" >"$tmp_config_file"
+sed -e 's/--.*$//' -e 's/ = /=/g' -e '/^---/d' "$config_file" | grep -v '^\s*$' > "$tmp_config_file"
 source "$tmp_config_file"
 # ##################################### #
 
@@ -48,7 +48,6 @@ Choose Rofi Themes
 Search for Keybinds
 Toggle Game Mode
 Switch Dark-Light Theme
-Rainbow Borders Mode
 EOF
 }
 
@@ -58,10 +57,10 @@ main() {
 
     # Map choices to corresponding files
     case "$choice" in
-    "Edit System Default Keybinds") file="$configs/Keybinds.conf" ;;
-    "Edit System Default Startup Apps") file="$configs/Startup_Apps.conf" ;;
-    "Edit System Default Window Rules") file="$configs/WindowRules.conf" ;;
-    "Edit System Default Settings") file="$configs/SystemSettings.conf" ;;
+    "Edit System Default Keybinds") file="$configs/Keybinds.lua" ;;
+    "Edit System Default Startup Apps") file="$configs/Startup_Apps.lua" ;;
+    "Edit System Default Window Rules") file="$configs/WindowRules.lua" ;;
+    "Edit System Default Settings") file="$configs/SystemSettings.lua" ;;
     "Set SDDM Wallpaper") $scriptsDir/sddm_wallpaper.sh --normal ;;
     "Choose Kitty Terminal Theme") $scriptsDir/Kitty_themes.sh ;;
     "Configure Monitors (nwg-displays)")
@@ -105,7 +104,6 @@ main() {
     "Search for Keybinds") $scriptsDir/KeyBinds.sh ;;
     "Toggle Game Mode") $scriptsDir/GameMode.sh ;;
     "Switch Dark-Light Theme") $scriptsDir/DarkLight.sh ;;
-    "Rainbow Borders Mode") rainbow_borders_menu ;;
     *) return ;; # Do nothing for invalid choices
     esac
 
