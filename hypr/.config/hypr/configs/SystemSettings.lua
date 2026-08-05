@@ -2,41 +2,39 @@
 
 local scriptsDir = os.getenv("HOME") .. "/.config/hypr/scripts"
 
--- /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  #
--- Default settings
--- This is where you put your own settings as this will not be touched during update
--- if the upgrade.sh is used.
-
--- refer to Hyprland wiki for more info https://wiki.hyprland.org/Configuring/Variables/
-
 hl.gesture({
 	fingers = 3,
 	direction = "horizontal",
 	action = "workspace",
 })
 
--- hl.gesture({
--- 	fingers = 4,
--- 	direction = "up",
--- 	action = "dispatcher",
--- 	-- TODO: manual review — extra gesture field "exec"
--- 	-- TODO: manual review — extra gesture field "hyprctl keyword cursor:zoom_factor \"$(hyprctl getoption cursor:zoom_factor | awk 'NR==1 {factor = $2; if (factor < 1) {factor = 1}; print factor * 1.5}')\""
--- })
+hl.gesture({
+	fingers = 4,
+	direction = "up",
+	action = function()
+		hl.exec_cmd(
+			"hyprctl keyword cursor:zoom_factor \"$(hyprctl getoption cursor:zoom_factor | awk 'NR==1 {factor = $2; if (factor < 1) {factor = 1}; print factor * 1.5}')\""
+		)
+	end,
+})
 
--- hl.gesture({
--- 	fingers = 4,
--- 	direction = "down",
--- 	action = "dispatcher",
--- 	-- TODO: manual review — extra gesture field "exec"
--- 	-- TODO: manual review — extra gesture field "hyprctl keyword cursor:zoom_factor \"$(hyprctl getoption cursor:zoom_factor | awk 'NR==1 {factor = $2; if (factor < 1) {factor = 1}; print factor / 1.5}')\""
--- })
--- hl.gesture({
--- 	fingers = 3,
--- 	direction = "up",
--- 	action = "dispatcher",
--- 	-- TODO: manual review — extra gesture field "exec"
--- 	-- TODO: manual review — extra gesture field "$scriptsDir/OverviewToggle.sh"
--- })
+hl.gesture({
+	fingers = 4,
+	direction = "down",
+	action = function()
+		hl.exec_cmd(
+			"hyprctl keyword cursor:zoom_factor \"$(hyprctl getoption cursor:zoom_factor | awk 'NR==1 {factor = $2; if (factor < 1) {factor = 1}; print factor / 1.5}')\""
+		)
+	end,
+})
+
+hl.gesture({
+	fingers = 3,
+	direction = "up",
+	action = function()
+		hl.exec_cmd(scriptsDir .. "/OverviewToggle.sh")
+	end,
+})
 
 hl.config({
 	master = {
