@@ -27,9 +27,10 @@
     ],
 
     // --- CENTER ---
+    // TODO: If workspaces aren't clicking, ensure waybar-git is installed (v0.15.0 stable had a bug).
+    // You can switch back to stable when v0.16.0 releases with: paru -S waybar
     "hyprland/workspaces": {
         "format": "{icon}",
-        "on-click": "activate",
         "persistent-workspaces": { "*": 4 },
         "format-icons": { "active": "", "default": "" }
     },
