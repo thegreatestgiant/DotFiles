@@ -25,4 +25,31 @@ jobs:
           submodules: true # Critically important to pull Nvim and Tmux plugins
 
       - name: 🚀 Run Setup Script
+        env:
+          CI: true
         run: bash setup.sh
+
+  test-arch:
+    name: Arch Linux Sandbox Test
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+
+    steps:
+      - name: 🛠️ Prepare Container
+        run: pacman -Syu --noconfirm git sudo base-devel
+
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: 👤 Add builder user for yay
+        run: |
+          useradd -m -G wheel builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          chown -R builder:builder .
+
+      - name: 🚀 Run Setup Script
+        env:
+          CI: true
+        run: su builder -c "CI=true bash setup.sh"

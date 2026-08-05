@@ -205,10 +205,15 @@ else
     DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone"
 fi
 
-STOW_APPS=$(gum choose --no-limit \
-    --selected "$DEFAULT_SELECTED" \
-    --header "Select which dotfiles to stow (Space to select, Enter to confirm)" \
-    bash zsh nvim tmux starship git ssh rclone hypr kitty)
+if [ "$CI" = "true" ]; then
+    echo "CI environment detected. Using default selection: $DEFAULT_SELECTED"
+    STOW_APPS=$(echo "$DEFAULT_SELECTED" | tr ',' '\n')
+else
+    STOW_APPS=$(gum choose --no-limit \
+        --selected "$DEFAULT_SELECTED" \
+        --header "Select which dotfiles to stow (Space to select, Enter to confirm)" \
+        bash zsh nvim tmux starship git ssh rclone hypr kitty)
+fi
 
 if [ -z "$STOW_APPS" ]; then
     echo "No apps selected. Skipping stow."
