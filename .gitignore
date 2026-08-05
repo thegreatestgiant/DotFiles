@@ -28,3 +28,6 @@ hypr/.config/hypr/rofi/wallust/*
 hypr/.config/hypr/waybar/wallust/*
 !hypr/.config/hypr/waybar/wallust/.gitkeep
 hypr/.config/hypr/cava/config
+
+# Ignore bfg jar
+bfg.jar
