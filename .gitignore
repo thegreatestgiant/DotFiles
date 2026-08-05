@@ -1,4 +1,6 @@
 ssh/.ssh/environment-*
+ssh/.ssh/known_hosts
+ssh/.ssh/known_hosts.old
 
 # Ignore Tmux plugins in standard location
 tmux/.tmux/plugins/*
