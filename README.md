@@ -51,6 +51,7 @@ chmod +x setup.sh
 #### 2. Follow the Interactive Prompts
 
 The script will automatically:
+
 1. Detect your OS and install the necessary dependencies (via `pacman`/`yay` or `apt`).
 2. Unlock your secrets (ensure `dotfiles_key.key` is present in `~/` or `~/Downloads/`).
 3. Present an interactive menu to select exactly which components you want to stow.
