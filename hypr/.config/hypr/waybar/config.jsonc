@@ -29,6 +29,7 @@
     // --- CENTER ---
     "hyprland/workspaces": {
         "format": "{icon}",
+        "on-click": "activate",
         "persistent-workspaces": { "*": 4 },
         "format-icons": { "active": "", "default": "" }
     },
@@ -96,11 +97,11 @@
     },
 
     // --- LEFT SIDE ---
-    // THE UBUNTU APP SWITCHER
+    // THE ARCH APP SWITCHER
     "custom/switcher": {
-        "format": "", 
-        "on-click": "rofi -show window",
-        "tooltip-format": "Switch Windows"
+        "format": "󰣇", 
+        "on-click": "pkill rofi || rofi -show drun -config ~/.config/hypr/rofi/config.rasi",
+        "tooltip-format": "Menu"
     },
 
      "custom/stats": {
