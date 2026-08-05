@@ -1,17 +1,19 @@
 local function load_wallust()
+	local colors = {}
 	local path = os.getenv("HOME") .. "/.config/hypr/wallust/wallust-hyprland.conf"
 	local f = io.open(path, "r")
 	if f then
 		for line in f:lines() do
 			local k, v = line:match("^%$([%w_]+)%s*=%s*(.*)$")
 			if k and v then
-				_G[k] = v
+				colors[k] = v
 			end
 		end
 		f:close()
 	end
+	return colors
 end
-load_wallust()
+local c = load_wallust()
 
 hl.config({
 	general = {
@@ -19,8 +21,8 @@ hl.config({
 		gaps_in = 5,
 		gaps_out = 15,
 		col = {
-			active_border = color12,
-			inactive_border = color10,
+			active_border = c.color12,
+			inactive_border = c.color10,
 		},
 	},
 	decoration = {
@@ -35,8 +37,8 @@ hl.config({
 			enabled = true,
 			range = 3,
 			render_power = 1,
-			color = color12,
-			color_inactive = color10,
+			color = c.color12,
+			color_inactive = c.color10,
 		},
 		blur = {
 			enabled = true,
@@ -51,11 +53,11 @@ hl.config({
 	},
 	group = {
 		col = {
-			border_active = color15,
+			border_active = c.color15,
 		},
 		groupbar = {
 			col = {
-				active = color0,
+				active = c.color0,
 			},
 		},
 	},

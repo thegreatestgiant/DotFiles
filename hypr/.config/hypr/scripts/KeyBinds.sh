@@ -11,9 +11,9 @@ if pidof rofi >/dev/null; then
 fi
 
 # define the config files
-keybinds_conf="$HOME/.config/hypr/configs/Keybinds.conf"
-user_keybinds_conf="$HOME/.config/hypr/configs/Keybinds.conf"
-laptop_conf="$HOME/.config/hypr/configs/Laptops.conf"
+keybinds_conf="$HOME/.config/hypr/configs/Keybinds.lua"
+user_keybinds_conf="$HOME/.config/hypr/configs/Keybinds.lua"
+laptop_conf="$HOME/.config/hypr/configs/Laptops.lua"
 rofi_theme="$HOME/.config/hypr/rofi/config-keybinds.rasi"
 msg='☣️ NOTE ☣️: Clicking with Mouse or Pressing ENTER will have NO function'
 
