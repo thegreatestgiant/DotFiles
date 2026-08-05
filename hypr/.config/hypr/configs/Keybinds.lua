@@ -14,8 +14,8 @@ hl.bind(
 	),
 	{ description = "app launcher" }
 )
-hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("kitty"), { description = "Open terminal" })
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("thunar"), { description = "file manager" })
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(term), { description = "Open terminal" })
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(files), { description = "file manager" })
 hl.bind(
 	mainMod .. " + B",
 	hl.dsp.exec_cmd('env ELECTRON_OZONE_PLATFORM_HINT=wayland xdg-open "https://"'),

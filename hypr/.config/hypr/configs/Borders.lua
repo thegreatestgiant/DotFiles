@@ -16,8 +16,8 @@ load_wallust()
 hl.config({
 	general = {
 		border_size = 2,
-		gaps_in = 2,
-		gaps_out = 4,
+		gaps_in = 5,
+		gaps_out = 15,
 		col = {
 			active_border = color12,
 			inactive_border = color10,

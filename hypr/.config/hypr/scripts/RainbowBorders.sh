@@ -3,8 +3,8 @@
 # for rainbow borders animation
 
 function random_hex() {
-    random_hex=("0xff$(openssl rand -hex 3)")
-    echo $random_hex
+    colors=("rgb(FF0000)" "rgb(FF7F00)" "rgb(FFFF00)" "rgb(00FF00)" "rgb(00FFFF)" "rgb(0000FF)" "rgb(8A2BE2)" "rgb(FF00FF)" "rgb(FF1493)" "rgb(00FA9A)")
+    echo ${colors[$RANDOM % ${#colors[@]}]}
 }
 
 # rainbow colors only for active window
