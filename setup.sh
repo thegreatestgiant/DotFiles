@@ -116,7 +116,9 @@ elif is_ubuntu; then
     # Install awww (Wallpaper daemon)
     if ! command -v awww &>/dev/null; then
         echo "🖼️ Installing awww (Wallpaper daemon)..."
-        cargo install --git https://codeberg.org/LGFae/awww.git
+        cargo install --git https://codeberg.org/LGFae/awww.git awww
+        cargo install --git https://codeberg.org/LGFae/awww.git awww-daemon
+        cargo install --git https://codeberg.org/LGFae/awww.git awww-clear
         mkdir -p ~/.local/bin
         ln -sf ~/.cargo/bin/awww ~/.local/bin/awww
         ln -sf ~/.cargo/bin/awww-daemon ~/.local/bin/awww-daemon
@@ -256,7 +258,7 @@ find . -maxdepth 1 -name "*.service" -exec cp {} "$HOME/.config/systemd/user/" \
 systemctl --user daemon-reload 2>/dev/null || true
 
 # Set default shell to zsh
-if [ "$SHELL" != "$(which zsh)" ]; then
+if [ "$SHELL" != "$(which zsh)" ] && [ "$CI" != "true" ]; then
     chsh -s $(which zsh)
 fi
 
