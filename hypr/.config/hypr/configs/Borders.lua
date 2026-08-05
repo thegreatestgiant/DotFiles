@@ -15,13 +15,34 @@ local function load_wallust()
 end
 local c = load_wallust()
 
+local function random_rainbow()
+	math.randomseed(os.time())
+	local colors = {
+		"rgb(FF0000)",
+		"rgb(FF7F00)",
+		"rgb(FFFF00)",
+		"rgb(00FF00)",
+		"rgb(00FFFF)",
+		"rgb(0000FF)",
+		"rgb(8A2BE2)",
+		"rgb(FF00FF)",
+		"rgb(FF1493)",
+		"rgb(00FA9A)",
+	}
+	local gradient = {}
+	for i = 1, 10 do
+		gradient[i] = colors[math.random(1, #colors)]
+	end
+	return { colors = gradient, angle = 270 }
+end
+
 hl.config({
 	general = {
 		border_size = 2,
-		gaps_in = 5,
-		gaps_out = 10,
+		gaps_in = 4,
+		gaps_out = 8,
 		col = {
-			active_border = c.color12,
+			active_border = random_rainbow(),
 			inactive_border = c.color10,
 		},
 	},

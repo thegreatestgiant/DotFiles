@@ -48,7 +48,6 @@ Choose Rofi Themes
 Search for Keybinds
 Toggle Game Mode
 Switch Dark-Light Theme
-Rainbow Borders Mode
 EOF
 }
 
@@ -105,7 +104,6 @@ main() {
     "Search for Keybinds") $scriptsDir/KeyBinds.sh ;;
     "Toggle Game Mode") $scriptsDir/GameMode.sh ;;
     "Switch Dark-Light Theme") $scriptsDir/DarkLight.sh ;;
-    "Rainbow Borders Mode") rainbow_borders_menu ;;
     *) return ;; # Do nothing for invalid choices
     esac
 
