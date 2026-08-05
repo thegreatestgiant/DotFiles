@@ -113,9 +113,9 @@ elif is_ubuntu; then
     # Install awww (Wallpaper daemon)
     if ! command -v awww &>/dev/null; then
         echo "🖼️ Installing awww (Wallpaper daemon)..."
-        cargo install --git https://codeberg.org/LGFae/awww.git awww
-        cargo install --git https://codeberg.org/LGFae/awww.git awww-daemon
-        cargo install --git https://codeberg.org/LGFae/awww.git awww-clear
+        cargo install --locked --git https://codeberg.org/LGFae/awww.git awww
+        cargo install --locked --git https://codeberg.org/LGFae/awww.git awww-daemon
+        cargo install --locked --git https://codeberg.org/LGFae/awww.git awww-clear
         mkdir -p ~/.local/bin
         ln -sf ~/.cargo/bin/awww ~/.local/bin/awww
         ln -sf ~/.cargo/bin/awww-daemon ~/.local/bin/awww-daemon
