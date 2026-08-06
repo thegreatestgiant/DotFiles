@@ -205,7 +205,16 @@ bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), "resize window")
 -- 🔄 MODAL SUBMAPS
 -- -----------------------------------------------------
 -- Resize Submap (Super + R)
-bind(mainMod .. " + R", hl.dsp.submap("resize"))
+bind(mainMod .. " + R", function()
+	local handle = io.popen("pidof hyprlock")
+	local result = handle:read("*a")
+	handle:close()
+	if result and result ~= "" then
+		os.execute("systemctl reboot")
+	else
+		hl.dispatch(hl.dsp.submap("resize"))
+	end
+end, "resize submap or reboot if locked", { locked = true })
 hl.define_submap("resize", function()
 	bind("h", hl.dsp.window.resize({ x = -20, y = 0, relative = true }), nil, { repeating = true })
 	bind("l", hl.dsp.window.resize({ x = 20, y = 0, relative = true }), nil, { repeating = true })
