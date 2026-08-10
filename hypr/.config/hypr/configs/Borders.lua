@@ -53,7 +53,7 @@ hl.config({
 		fullscreen_opacity = 1.0,
 		dim_inactive = true,
 		dim_strength = 0.1,
-		dim_special = 0.8,
+		dim_special = 0.1,
 		shadow = {
 			enabled = true,
 			range = 3,
@@ -68,7 +68,7 @@ hl.config({
 			new_optimizations = true,
 			xray = true,
 			ignore_opacity = true,
-			special = true,
+			special = false,
 			popups = true,
 		},
 	},

@@ -6,7 +6,6 @@ local wallDIR = os.getenv("HOME") .. "/Pictures/wallpapers"
 hl.on("hyprland.start", function()
 	hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 	hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-	hl.exec_cmd("$HOME/.config/hypr/scripts/Dropterminal.sh kitty &")
 	hl.exec_cmd(scriptsDir .. "/Polkit.sh")
 	hl.exec_cmd("nm-applet --indicator")
 	hl.exec_cmd("swaync -c ~/.config/hypr/swaync/config.json")

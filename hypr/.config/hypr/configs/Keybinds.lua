@@ -63,7 +63,7 @@ bind(
 	hl.dsp.window.set_prop({ prop = "opaque", value = "toggle", window = "active" }),
 	"toggle active window opacity"
 )
-bind(mainMod .. " + grave", scriptsDir .. "/Dropterminal.sh $term", "DropDown terminal")
+bind(mainMod .. " + grave", scriptsDir .. "/Dropterminal.sh", "DropDown terminal")
 
 -- -----------------------------------------------------
 -- 🎯 FOCUS & NAVIGATION

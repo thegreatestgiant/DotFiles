@@ -12,6 +12,7 @@ for _, a in ipairs({
 	{ leaf = "borderangle", enabled = true, speed = 30, bezier = "liner",  style = "loop" },
 	{ leaf = "fade",        enabled = true, speed = 10, bezier = "default" },
 	{ leaf = "workspaces",  enabled = true, speed = 5,  bezier = "wind" },
+	{ leaf = "specialWorkspace", enabled = true, speed = 5, bezier = "wind", style = "slidevert" },
 }) do hl.animation(a) end
 
 hl.config({

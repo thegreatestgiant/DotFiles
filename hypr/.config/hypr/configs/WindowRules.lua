@@ -806,6 +806,17 @@ hl.window_rule({
 	no_initial_focus = true,
 })
 
+-- DROPDOWN TERMINAL RULES
+-- Natively open in special workspace
+hl.window_rule({
+	name = "Dropdown-Terminal",
+	match = {
+		class = "^(kitty-dropterm)$",
+	},
+	workspace = "special:dropdown",
+	float = true,
+})
+
 -- LAYER RULES
 hl.layer_rule({
 	blur = true,
