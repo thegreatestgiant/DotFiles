@@ -87,7 +87,11 @@ bind(mainMod .. " + SHIFT + Return", hl.dsp.layout("swapwithmaster"), "swap with
 -- -----------------------------------------------------
 bind(mainMod .. " + tab", hl.dsp.focus({ workspace = "m+1" }), "next workspace")
 bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), "previous workspace")
-bind(mainMod .. " + U", hl.dsp.workspace.toggle_special(""), "toggle special workspace")
+bind(mainMod .. " + U", function()
+	hl.config({ decoration = { blur = { special = true } } })
+	hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 5, bezier = "wind", style = "slidefade 15" })
+	hl.dispatch(hl.dsp.workspace.toggle_special(""))
+end, "toggle special workspace")
 bind(mainMod .. " + SHIFT + U", hl.dsp.window.move({ workspace = "special" }), "move to special workspace")
 bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }), "next workspace")
 bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }), "previous workspace")

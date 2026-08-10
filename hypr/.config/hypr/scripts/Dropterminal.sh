@@ -3,6 +3,10 @@
 # Toggle a persistent dropdown terminal that lives in a special workspace.
 # This prevents it from stealing focus when changing desktops, and handles its own state natively.
 
+# Dynamically set rules for this specific special workspace
+hyprctl eval 'hl.config({ decoration = { blur = { special = false } } })' >/dev/null 2>&1
+hyprctl eval 'hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 5, bezier = "wind", style = "slidevert" })' >/dev/null 2>&1
+
 # Check if kitty-dropterm exists
 if ! hyprctl clients -j | jq -e 'any(.[]; .class == "kitty-dropterm")' > /dev/null; then
     # Doesn't exist, spawn it. 
