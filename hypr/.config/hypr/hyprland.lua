@@ -1,4 +1,6 @@
-configs = os.getenv("HOME") .. "/.config/hypr/configs"
+local config_dir = os.getenv("HOME") .. "/.config/hypr"
+package.path = package.path .. ";" .. config_dir .. "/?.lua;" .. config_dir .. "/?/init.lua"
+configs = config_dir .. "/configs"
 
 require("configs.ENVariables")
 require("configs.Keybinds")
