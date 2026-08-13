@@ -10,6 +10,18 @@ if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
         print -P "%F{160} The clone has failed.%f"
 fi
 
+### -------------------------------------------------------------------------
+### CUSTOM COMPLETIONS
+### -------------------------------------------------------------------------
+if command -v rustup &> /dev/null; then
+    [[ ! -d "$HOME/.zfunc" ]] && mkdir -p "$HOME/.zfunc"
+    if [[ ! -f "$HOME/.zfunc/_rustup" ]]; then
+        rustup completions zsh > "$HOME/.zfunc/_rustup" 2>/dev/null || true
+        rustup completions zsh cargo > "$HOME/.zfunc/_cargo" 2>/dev/null || true
+    fi
+fi
+[[ -d "$HOME/.zfunc" ]] && fpath=("$HOME/.zfunc" $fpath)
+
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 
 ### -------------------------------------------------------------------------
