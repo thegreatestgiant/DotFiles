@@ -271,7 +271,7 @@ export SUDO_EDITOR='nvim'
 export UV_LINK_MODE=copy
 # Add custom path
 # Add Node global binaries explicitly so they work without triggering NVM
-export PATH="/usr/local/go/bin:$HOME/go/bin:/opt/nvim-linux-x86_64/bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:/usr/local/go/bin:$HOME/go/bin:/opt/nvim-linux-x86_64/bin:$HOME/.local/bin:$PATH"
   
 # SSH Agent Bridge (Bitwarden/WSL) - DISABLED
 # if [ -f "$HOME/.ssh/ssh-agent-bridge-bit.sh" ]; then
