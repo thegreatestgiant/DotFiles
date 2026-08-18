@@ -31,7 +31,61 @@ is_ubuntu() {
     [[ "$OS" == "ubuntu" || "$OS" == "debian" || "$OS_LIKE" == *"debian"* ]]
 }
 
-# 2. Package Installation & Dependencies
+# 2. Install Gum & Ask What to Install
+# ----------------------------------------------------------------------
+if is_arch; then
+    if ! command -v gum &>/dev/null; then
+        echo "📦 Installing gum..."
+        sudo pacman -Sy --needed --noconfirm gum
+    fi
+    DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone,hypr,kitty"
+elif is_ubuntu; then
+    if ! command -v gum &>/dev/null; then
+        echo "📦 Installing gum..."
+        sudo apt update
+        sudo apt install -y curl gpg
+        sudo mkdir -p /etc/apt/keyrings
+        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg --yes
+        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list >/dev/null
+        sudo apt update
+        sudo apt install -y gum
+    fi
+    DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone"
+else
+    echo "Unsupported OS."
+    exit 1
+fi
+
+echo "🔗 Selecting configs to stow and dependencies to install..."
+
+if [ "$CI" = "true" ]; then
+    echo "CI environment detected. Using default selection: $DEFAULT_SELECTED"
+    STOW_APPS=$(echo "$DEFAULT_SELECTED" | tr ',' '\n')
+else
+    STOW_APPS=$(gum choose --no-limit \
+        --selected "$DEFAULT_SELECTED" \
+        --header "Select which dotfiles/components to install (Space to select, Enter to confirm)" \
+        bash zsh nvim tmux starship git ssh rclone hypr kitty)
+fi
+
+if [ -z "$STOW_APPS" ]; then
+    echo "No apps selected. Exiting."
+    exit 0
+fi
+
+mapfile -t APPS_ARRAY <<< "$STOW_APPS"
+
+wants() {
+    local app=$1
+    for a in "${APPS_ARRAY[@]}"; do
+        if [[ "$a" == "$app" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# 3. Package Installation & Dependencies
 # ----------------------------------------------------------------------
 if is_arch; then
     echo "Distro: Arch Linux / CachyOS"
@@ -45,56 +99,58 @@ if is_arch; then
         cd ~
     fi
 
-    echo "📦 Installing system packages..."
-    sudo pacman -S --needed --noconfirm \
-        git stow zsh base-devel unzip \
-        ripgrep fd xclip python \
-        nodejs npm eza \
-        fzf lazygit neovim go \
-        zoxide starship kitty \
-        tmux git-crypt \
-        jdk-openjdk jdk21-openjdk maven \
-        rbw pinentry gum 
+    # Base packages
+    ARCH_PKGS=(git stow base-devel unzip wget curl)
+    
+    wants zsh && ARCH_PKGS+=(zsh eza zoxide)
+    wants nvim && ARCH_PKGS+=(neovim ripgrep fd xclip python nodejs npm fzf lazygit go)
+    wants tmux && ARCH_PKGS+=(tmux)
+    wants starship && ARCH_PKGS+=(starship)
+    wants hypr && ARCH_PKGS+=(kitty)
+    wants kitty && ARCH_PKGS+=(kitty)
+    wants git && ARCH_PKGS+=(git-crypt rbw pinentry)
+    wants nvim && ARCH_PKGS+=(jdk-openjdk jdk21-openjdk maven)
 
-    # AUR packages
-    yay -S --needed --noconfirm vivid
+    echo "📦 Installing system packages..."
+    sudo pacman -S --needed --noconfirm "${ARCH_PKGS[@]}"
+
+    if wants hypr; then
+        yay -S --needed --noconfirm vivid
+    fi
 
 elif is_ubuntu; then
     echo "Distro: Ubuntu / Debian"
     export DEBIAN_FRONTEND=noninteractive
     sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ | sudo tee /etc/timezone >/dev/null
 
-    echo "🔑 Setting up repositories..."
-    sudo apt update
-    sudo apt install -y wget gpg curl
-
-    # Add Eza Repo
-    if ! command -v eza &>/dev/null; then
+    # Add Eza Repo if zsh requested
+    if wants zsh && ! command -v eza &>/dev/null; then
         sudo mkdir -p /etc/apt/keyrings
         wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg --yes
         echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list >/dev/null
+        sudo apt update
     fi
 
-    # Add Charm Repo for Gum
-    if ! command -v gum &>/dev/null; then
-        sudo mkdir -p /etc/apt/keyrings
-        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg --yes
-        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list >/dev/null
-    fi
-
-    sudo apt update
-
+    # Base packages
+    UBUNTU_PKGS=(git stow build-essential unzip wget curl)
+    
+    wants zsh && UBUNTU_PKGS+=(zsh eza)
+    wants nvim && UBUNTU_PKGS+=(ripgrep fd-find xclip python3-venv nodejs npm)
+    wants tmux && UBUNTU_PKGS+=(tmux ncurses-term)
+    wants git && UBUNTU_PKGS+=(pinentry-tty)
+    wants hypr && UBUNTU_PKGS+=(wtype liblz4-dev libdav1d-dev pkg-config wayland-protocols libwayland-dev)
+    
     echo "📦 Installing system packages..."
-    sudo apt install -y git stow zsh build-essential unzip ripgrep fd-find xclip python3-venv nodejs npm eza ncurses-term pinentry-tty gum wtype cargo liblz4-dev libdav1d-dev pkg-config wayland-protocols libwayland-dev
+    sudo apt install -y "${UBUNTU_PKGS[@]}"
 
     # 'fd' fix for Ubuntu
-    if ! command -v fd &>/dev/null; then
+    if wants nvim && ! command -v fd &>/dev/null; then
         mkdir -p ~/.local/bin
         ln -sf $(which fdfind) ~/.local/bin/fd
     fi
 
     # Install Vivid
-    if ! command -v vivid &>/dev/null; then
+    if ( wants hypr || wants bash || wants zsh ) && ! command -v vivid &>/dev/null; then
         echo "🎨 Installing Vivid (Latest)..."
         VIVID_TAG=$(curl -s "https://api.github.com/repos/sharkdp/vivid/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
         VIVID_VERSION="${VIVID_TAG#v}"
@@ -104,15 +160,23 @@ elif is_ubuntu; then
     fi
 
     # Install FZF
-    if [ ! -d "$HOME/.fzf" ]; then
+    if wants nvim && [ ! -d "$HOME/.fzf" ]; then
         echo "🔍 Installing FZF..."
         git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
         ~/.fzf/install --all
     fi
 
     # Install awww (Wallpaper daemon)
-    if ! command -v awww &>/dev/null; then
+    if wants hypr && ! command -v awww &>/dev/null; then
         echo "🖼️ Installing awww (Wallpaper daemon)..."
+        
+        # Install latest Rust via rustup
+        if ! command -v cargo &>/dev/null; then
+            echo "🦀 Installing Rust (rustup)..."
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            source "$HOME/.cargo/env"
+        fi
+
         rm -rf /tmp/awww_install
         git clone https://codeberg.org/LGFae/awww.git /tmp/awww_install
         sed -i 's/rustix::stdio::stdout()/unsafe { rustix::stdio::stdout() }/g' /tmp/awww_install/daemon/src/cli.rs
@@ -127,7 +191,7 @@ elif is_ubuntu; then
     fi
 
     # Install Lazygit
-    if ! command -v lazygit &>/dev/null; then
+    if wants nvim && ! command -v lazygit &>/dev/null; then
         echo "💤 Installing Lazygit (Latest)..."
         LG_TAG=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
         curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LG_TAG}_Linux_x86_64.tar.gz"
@@ -137,7 +201,7 @@ elif is_ubuntu; then
     fi
 
     # Install Neovim
-    if ! command -v nvim &>/dev/null; then
+    if wants nvim && ! command -v nvim &>/dev/null; then
         echo "📝 Installing Neovim..."
         curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
         sudo rm -rf /opt/nvim-linux-x86_64
@@ -147,7 +211,7 @@ elif is_ubuntu; then
     fi
 
     # Install Golang
-    if ! command -v go &>/dev/null; then
+    if wants nvim && ! command -v go &>/dev/null; then
         echo "🐹 Installing Latest Golang..."
         GO_VERSION=$(curl -sL https://go.dev/dl/ | grep -oP 'go[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
         wget "https://dl.google.com/go/${GO_VERSION}.linux-amd64.tar.gz" -O go.tar.gz
@@ -159,7 +223,7 @@ elif is_ubuntu; then
     fi
 
     # Install rbw
-    if ! command -v rbw &>/dev/null; then
+    if wants git && ! command -v rbw &>/dev/null; then
         echo "🔐 Installing rbw (Latest)..."
         RBW_TAG=$(curl -s "https://api.github.com/repos/doy/rbw/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
         wget -qO rbw.deb "https://git.tozt.net/rbw/releases/deb/rbw_${RBW_TAG}_amd64.deb"
@@ -168,22 +232,19 @@ elif is_ubuntu; then
     fi
 
     # Install Zoxide
-    if ! command -v zoxide &>/dev/null; then
+    if wants zsh && ! command -v zoxide &>/dev/null; then
         echo "📂 Installing Zoxide..."
         curl -sSf https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-        sudo mv ~/.local/bin/zoxide /usr/local/bin/
+        sudo mv ~/.local/bin/zoxide /usr/local/bin/ || echo "Failed to move zoxide to /usr/local/bin/"
     fi
 
     # Install Starship
-    if ! command -v starship &>/dev/null; then
+    if wants starship && ! command -v starship &>/dev/null; then
         curl -sS https://starship.rs/install.sh | sh -s -- -y
     fi
-else
-    echo "Unsupported OS."
-    exit 1
 fi
 
-# 3. Clone & Unlock
+# 4. Clone & Unlock
 # ----------------------------------------------------------------------
 if [ ! -d "$DOTFILES_DIR" ]; then
     echo "📥 Cloning dotfiles..."
@@ -197,60 +258,34 @@ if [ -d ".git-crypt" ] && [ -f "$KEY_PATH" ]; then
     git-crypt unlock "$KEY_PATH"
 fi
 
-# 4. Interactive Stow via Gum
+# 5. Stow
 # ----------------------------------------------------------------------
-echo "🔗 Selecting configs to stow..."
-
-# Pre-select based on OS
-if is_arch; then
-    DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone,hypr,kitty"
-else
-    DEFAULT_SELECTED="bash,zsh,nvim,tmux,starship,git,ssh,rclone"
-fi
-
-if [ "$CI" = "true" ]; then
-    echo "CI environment detected. Using default selection: $DEFAULT_SELECTED"
-    STOW_APPS=$(echo "$DEFAULT_SELECTED" | tr ',' '\n')
-else
-    STOW_APPS=$(gum choose --no-limit \
-        --selected "$DEFAULT_SELECTED" \
-        --header "Select which dotfiles to stow (Space to select, Enter to confirm)" \
-        bash zsh nvim tmux starship git ssh rclone hypr kitty)
-fi
-
-if [ -z "$STOW_APPS" ]; then
-    echo "No apps selected. Skipping stow."
-else
-    # Convert newline-separated list to array
-    mapfile -t APPS_ARRAY <<< "$STOW_APPS"
+echo "🔗 Stowing configs..."
+for app in "${APPS_ARRAY[@]}"; do
+    case $app in
+        bash) file=".bashrc" ;;
+        zsh) file=".zshrc" ;;
+        nvim) file=".config/nvim" ;;
+        tmux) file=".config/tmux" ;;
+        starship) file=".config/starship.toml" ;;
+        hypr) file=".config/hypr" ;;
+        kitty) file=".config/kitty" ;;
+        ssh) file=".ssh" ;;
+        rclone) file=".config/rclone" ;;
+        git) file=".gitconfig" ;;
+        *) file="" ;;
+    esac
     
-    # Backup conflicts
-    for app in "${APPS_ARRAY[@]}"; do
-        case $app in
-            bash) file=".bashrc" ;;
-            zsh) file=".zshrc" ;;
-            nvim) file=".config/nvim" ;;
-            tmux) file=".config/tmux" ;;
-            starship) file=".config/starship.toml" ;;
-            hypr) file=".config/hypr" ;;
-            kitty) file=".config/kitty" ;;
-            ssh) file=".ssh" ;;
-            rclone) file=".config/rclone" ;;
-            git) file=".gitconfig" ;;
-            *) file="" ;;
-        esac
-        
-        if [ -n "$file" ] && [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
-            echo "  Backing up $file → $file.bak"
-            mv "$HOME/$file" "$HOME/$file.bak"
-        fi
-    done
-    
-    echo "Stowing: ${APPS_ARRAY[*]}"
-    stow "${APPS_ARRAY[@]}"
-fi
+    if [ -n "$file" ] && [ -e "$HOME/$file" ] && [ ! -L "$HOME/$file" ]; then
+        echo "  Backing up $file → $file.bak"
+        mv "$HOME/$file" "$HOME/$file.bak"
+    fi
+done
 
-# 5. Final Polish
+echo "Stowing: ${APPS_ARRAY[*]}"
+stow "${APPS_ARRAY[@]}"
+
+# 6. Final Polish
 # ----------------------------------------------------------------------
 # Install systemd user services
 echo "⚙️ Installing systemd user services..."
@@ -259,7 +294,7 @@ find . -maxdepth 1 -name "*.service" -exec cp {} "$HOME/.config/systemd/user/" \
 systemctl --user daemon-reload 2>/dev/null || true
 
 # Set default shell to zsh
-if [ "$SHELL" != "$(which zsh)" ] && [ "$CI" != "true" ]; then
+if wants zsh && [ "$SHELL" != "$(which zsh)" ] && [ "$CI" != "true" ]; then
     chsh -s $(which zsh)
 fi
 
