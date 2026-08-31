@@ -50,7 +50,7 @@ hl.config({
 		kb_layout = "us, il",
 		kb_variant = ",",
 		kb_model = "",
-		kb_options = "caps:swapescape",
+		kb_options = "caps:swapescape,grp:alt_shift_toggle",
 		kb_rules = "",
 		repeat_rate = 50,
 		repeat_delay = 300,

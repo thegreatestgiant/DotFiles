@@ -9,7 +9,7 @@ hl.bind("XF86KbdLightOnOff", hl.dsp.exec_cmd("~/.config/hypr/scripts/BrightnessK
 hl.bind("xf86KbdBrightnessDown", hl.dsp.exec_cmd(scriptsDir .. "/BrightnessKbd.sh --dec"), { repeating = true })
 hl.bind("xf86KbdBrightnessUp", hl.dsp.exec_cmd(scriptsDir .. "/BrightnessKbd.sh --inc"), { repeating = true })
 hl.bind("xf86Launch1", hl.dsp.exec_cmd("rog-control-center"))
-hl.bind("xf86Launch3", hl.dsp.exec_cmd("asusctl aura effect --next-mode"))
+hl.bind("xf86Launch3", hl.dsp.exec_cmd("asusctl leds next"))
 hl.bind("xf86Launch4", hl.dsp.exec_cmd("asusctl profile next"))
 hl.bind("xf86MonBrightnessDown", hl.dsp.exec_cmd(scriptsDir .. "/Brightness.sh --dec"), { repeating = true })
 hl.bind("xf86MonBrightnessUp", hl.dsp.exec_cmd(scriptsDir .. "/Brightness.sh --inc"), { repeating = true })

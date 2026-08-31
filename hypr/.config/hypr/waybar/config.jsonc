@@ -18,7 +18,7 @@
         "privacy",
         "tray",
         "custom/stats", 
-        "custom/keyboard-layout",
+        "hyprland/language",
         "backlight",
         "pulseaudio",
         "battery",
@@ -44,11 +44,10 @@
         "tooltip-format": "<tt><small>{calendar}</small></tt>"
     },
 
-    "custom/keyboard-layout": {
-        "exec": "~/.config/hypr/scripts/KeyboardLayout.sh status",
-        "interval": 2,
-        "format": "  {}",
-        "tooltip-format": "Layout: {}\nAlt+Shift to switch"
+    "hyprland/language": {
+        "format": "{}",
+        "format-en": "us",
+        "format-he": "il"
     },
 
 

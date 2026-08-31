@@ -159,12 +159,7 @@ bind(mainMod .. " + P", scriptsDir .. "/Wlogout.sh", "powermenu")
 bind(mainMod .. " + N", "swaync-client -t -sw", "notification panel")
 bind(mainMod .. " + SHIFT + E", scriptsDir .. "/Kool_Quick_Settings.sh", "Quick settings menu")
 bind(mainMod .. " + SHIFT + B", "pkill -SIGUSR1 waybar", "toggle waybar on/off")
-bind(
-	"ALT_L + SHIFT_L",
-	hl.dsp.exec_cmd(scriptsDir .. "/KeyboardLayout.sh switch"),
-	"switch keyboard layout globally",
-	{ locked = true, non_consuming = true }
-)
+-- (Native alt-shift toggle handles keyboard layout now)
 
 -- Media & Hardware Keys
 bind(
