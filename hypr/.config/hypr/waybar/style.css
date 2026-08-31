@@ -7,15 +7,15 @@
 }
 
 #language {
-  color: #cba6f7;
-} /* Purple, like stats */
+  color: #f38ba8;
+} /* Red */
 
 window#waybar {
   background: transparent; /* Makes the main bar invisible */
 }
 #language {
-  color: #cba6f7;
-} /* Purple, like stats */
+  color: #f38ba8;
+} /* Red */
 /* --- THE "PILLS" (Left, Center, Right modules) --- */
 .modules-left,
 .modules-center,
