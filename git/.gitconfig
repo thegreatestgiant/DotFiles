@@ -21,3 +21,5 @@
 	rebase = true
 ; [includeIf "gitdir:~/.local/share/nvim/lazy/"]
 ;     path = ~/.gitconfig-no-ssh-rewrite
+[core]
+	excludesfile = /home/sean/.gitignore_global
