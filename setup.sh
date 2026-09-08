@@ -58,7 +58,7 @@ fi
 
 echo "🔗 Selecting configs to stow and dependencies to install..."
 
-if [ "$CI" = "true" ]; then
+if [ "$CI" = "true" ] || [ "$CODESPACES" = "true" ]; then
     echo "CI environment detected. Using default selection: $DEFAULT_SELECTED"
     STOW_APPS=$(echo "$DEFAULT_SELECTED" | tr ',' '\n')
 else
