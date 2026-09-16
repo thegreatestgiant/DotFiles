@@ -1,60 +1,88 @@
 #!/usr/bin/env bash
-# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
-# Script for keyboard backlights (if supported) using brightnessctl
+# =============================================================================
+# BrightnessKbd.sh — Keyboard backlight brightness control for ASUS ProArt P16
+# =============================================================================
+#
+# WHY THIS EXISTS
+# ---------------
+# The ProArt P16 H7606WV uses an ITE 8910 USB HID keyboard controller.
+# The kernel's hid-asus driver fails to initialise the backlight at boot
+# (EOPNOTSUPP -75), so the standard tools don't work:
+#   - brightnessctl: "Device '*::kbd_backlight' not found"
+#   - asusctl leds:  "No sysfs brightness control"
+#
+# Brightness is instead controlled by sending raw HID feature reports via
+# /usr/local/bin/asus-kbd-backlight (which requires root). A sudoers rule
+# at /etc/sudoers.d/asus-kbd-backlight allows this user to call it without
+# a password prompt.
+#
+# BRIGHTNESS LEVELS
+# -----------------
+#   0 = off   1 = low   2 = med   3 = high
+#
+# KEYBINDINGS (from Laptops.lua)
+# ---------------
+#   XF86KbdLightOnOff  → --inc (cycles 0→1→2→3→0)
+#   xf86KbdBrightnessUp → --inc
+#   xf86KbdBrightnessDown → --dec
+# =============================================================================
 
 iDIR="$HOME/.config/swaync/icons"
 
-# Get keyboard brightness
-get_kbd_backlight() {
-    echo $(brightnessctl -d '*::kbd_backlight' -m | cut -d, -f4)
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+get_level() {
+    sudo /usr/local/bin/asus-kbd-backlight get 2>/dev/null || echo "2"
 }
 
-# Get icons
+level_to_pct() {
+    # 0→0%, 1→33%, 2→66%, 3→100%
+    echo $(( $1 * 33 ))
+}
+
 get_icon() {
-    current=$(get_kbd_backlight | sed 's/%//')
-    if [ "$current" -le "20" ]; then
-        icon="$iDIR/brightness-20.png"
-    elif [ "$current" -le "40" ]; then
-        icon="$iDIR/brightness-40.png"
-    elif [ "$current" -le "60" ]; then
-        icon="$iDIR/brightness-60.png"
-    elif [ "$current" -le "80" ]; then
-        icon="$iDIR/brightness-80.png"
-    else
-        icon="$iDIR/brightness-100.png"
+    local pct=$1
+    if   [ "$pct" -le 20 ]; then echo "$iDIR/brightness-20.png"
+    elif [ "$pct" -le 40 ]; then echo "$iDIR/brightness-40.png"
+    elif [ "$pct" -le 60 ]; then echo "$iDIR/brightness-60.png"
+    elif [ "$pct" -le 80 ]; then echo "$iDIR/brightness-80.png"
+    else                          echo "$iDIR/brightness-100.png"
     fi
 }
-# Notify
-notify_user() {
-    notify-send -e -h string:x-canonical-private-synchronous:brightness_notif -h int:value:$current -h boolean:SWAYNC_BYPASS_DND:true -u low -i "$icon" "Keyboard" "Brightness:$current%"
+
+notify_brightness() {
+    local level pct icon names=("off" "low" "med" "high")
+    level=$(get_level)
+    pct=$(level_to_pct "$level")
+    icon=$(get_icon "$pct")
+    notify-send -e \
+        -h string:x-canonical-private-synchronous:brightness_notif \
+        -h int:value:"$pct" \
+        -h boolean:SWAYNC_BYPASS_DND:true \
+        -u low -i "$icon" \
+        "Keyboard" "Brightness: ${names[$level]}"
 }
 
-# Change brightness
-change_kbd_backlight() {
-    brightnessctl -d *::kbd_backlight set "$1" && get_icon && notify_user
-}
-
-# Execute accordingly
+# ---------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------
 case "$1" in
 "--get")
-    get_kbd_backlight
+    # Return percentage for waybar/scripts
+    pct=$(level_to_pct "$(get_level)")
+    echo "${pct}%"
     ;;
 "--inc")
-    # Get current and max values
-    CURRENT=$(brightnessctl -d *::kbd_backlight g)
-    MAX=$(brightnessctl -d *::kbd_backlight m)
-
-    # If at max brightness, reset to 0. Otherwise, increase by 1.
-    if [ "$CURRENT" -eq "$MAX" ]; then
-        change_kbd_backlight "0"
-    else
-        change_kbd_backlight "+1"
-    fi
+    sudo /usr/local/bin/asus-kbd-backlight inc > /dev/null
+    notify_brightness
     ;;
 "--dec")
-    change_kbd_backlight "1-"
+    sudo /usr/local/bin/asus-kbd-backlight dec > /dev/null
+    notify_brightness
     ;;
 *)
-    get_kbd_backlight
+    pct=$(level_to_pct "$(get_level)")
+    echo "${pct}%"
     ;;
 esac
