@@ -58,7 +58,11 @@ fi
 
 echo "🔗 Selecting configs to stow and dependencies to install..."
 
-if [ "$CI" = "true" ] || [ "$CODESPACES" = "true" ]; then
+if [ "$CODESPACES" = "true" ]; then
+    CODESPACES_SELECTED="bash,zsh,nvim,starship"
+    echo "Codespaces environment detected. Using selection: $CODESPACES_SELECTED"
+    STOW_APPS=$(echo "$CODESPACES_SELECTED" | tr ',' '\n')
+elif [ "$CI" = "true" ]; then
     echo "CI environment detected. Using default selection: $DEFAULT_SELECTED"
     STOW_APPS=$(echo "$DEFAULT_SELECTED" | tr ',' '\n')
 else
@@ -123,6 +127,10 @@ elif is_ubuntu; then
     export DEBIAN_FRONTEND=noninteractive
     sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ | sudo tee /etc/timezone >/dev/null
 
+    # Base packages (install first — wget/curl needed for repo setup below)
+    echo "📦 Installing base packages..."
+    sudo apt install -y git stow build-essential unzip wget curl
+
     # Add Eza Repo if zsh requested
     if wants zsh && ! command -v eza &>/dev/null; then
         sudo mkdir -p /etc/apt/keyrings
@@ -131,8 +139,8 @@ elif is_ubuntu; then
         sudo apt update
     fi
 
-    # Base packages
-    UBUNTU_PKGS=(git stow build-essential unzip wget curl)
+    # Conditional packages
+    UBUNTU_PKGS=()
     
     wants zsh && UBUNTU_PKGS+=(zsh eza)
     wants nvim && UBUNTU_PKGS+=(ripgrep fd-find xclip python3-venv nodejs npm)
@@ -140,8 +148,10 @@ elif is_ubuntu; then
     wants git && UBUNTU_PKGS+=(pinentry-tty)
     wants hypr && UBUNTU_PKGS+=(wtype liblz4-dev libdav1d-dev pkg-config wayland-protocols libwayland-dev)
     
-    echo "📦 Installing system packages..."
-    sudo apt install -y "${UBUNTU_PKGS[@]}"
+    if [ ${#UBUNTU_PKGS[@]} -gt 0 ]; then
+        echo "📦 Installing additional packages..."
+        sudo apt install -y "${UBUNTU_PKGS[@]}"
+    fi
 
     # 'fd' fix for Ubuntu
     if wants nvim && ! command -v fd &>/dev/null; then
@@ -294,7 +304,7 @@ find . -maxdepth 1 -name "*.service" -exec cp {} "$HOME/.config/systemd/user/" \
 systemctl --user daemon-reload 2>/dev/null || true
 
 # Set default shell to zsh
-if wants zsh && [ "$SHELL" != "$(which zsh)" ] && [ "$CI" != "true" ]; then
+if wants zsh && [ "$SHELL" != "$(which zsh)" ] && [ "$CI" != "true" ] && [ "$CODESPACES" != "true" ]; then
     chsh -s $(which zsh)
 fi
 
