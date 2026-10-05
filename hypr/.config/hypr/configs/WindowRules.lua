@@ -757,7 +757,6 @@ hl.window_rule({
 		tag = "games",
 	},
 	no_blur = true,
-	fullscreen = false,
 })
 
 -- This not gonna take the focus to the window that appears when
