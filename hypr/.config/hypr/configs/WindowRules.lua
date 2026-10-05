@@ -787,7 +787,6 @@ hl.window_rule({
 	},
 	no_blur = true,
 	fullscreen = false,
-	fullscreen = false,
 })
 
 -- This not gonna take the focus to the window that appears when

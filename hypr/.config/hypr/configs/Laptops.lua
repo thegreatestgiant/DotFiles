@@ -1,6 +1,8 @@
 local mainMod = "SUPER"
 local scriptsDir = os.getenv("HOME") .. "/.config/hypr/scripts"
-local Touchpad_Device = "asue1209:00-04f3:319f-touchpad"
+local Touchpad_Device = "ascp1a01:00-093a:3014-touchpad"
+local Touchscreen_Device = "wdht1f01:00-2575:0926"
+local Stylus_Device = "wdht1f01:00-2575:0926-stylus"
 local TOUCHPAD_ENABLED = true
 
 -- for disabling Touchpad. hyprctl devices to get device name.
@@ -30,4 +32,15 @@ hl.bind("ALT + F6", hl.dsp.exec_cmd(scriptsDir .. "/ScreenShot.sh --active"))
 hl.device({
 	name = Touchpad_Device,
 	enabled = TOUCHPAD_ENABLED,
+})
+
+hl.device({
+	name = Touchscreen_Device,
+	output = "eDP-1",
+	enabled = true,
+})
+
+hl.device({
+	name = Stylus_Device,
+	output = "eDP-1",
 })

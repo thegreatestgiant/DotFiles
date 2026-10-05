@@ -59,7 +59,6 @@ hl.config({
 		numlock_by_default = true,
 		left_handed = false,
 		follow_mouse = 1,
-		float_switch_override_focus = false,
 		touchpad = {
 			disable_while_typing = true,
 			natural_scroll = true,
@@ -67,10 +66,6 @@ hl.config({
 			middle_button_emulation = true,
 			tap_to_click = true,
 			drag_lock = false,
-		},
-		-- below for devices with touchdevice ie. touchscreen
-		touchdevice = {
-			enabled = true,
 		},
 		tablet = {
 			transform = 0,
@@ -88,7 +83,6 @@ hl.config({
 	},
 	misc = {
 		disable_hyprland_logo = true,
-		disable_splash_rendering = true,
 		-- vfr = true
 		vrr = 2,
 		mouse_move_enables_dpms = true,
@@ -100,8 +94,6 @@ hl.config({
 		enable_anr_dialog = true,
 		anr_missed_pings = 15,
 		allow_session_lock_restore = true,
-		on_focus_under_fullscreen = 1,
-		-- 2 - New focused window stays behind the fullscreen one
 	},
 	--opengl {
 	--  nvidia_anti_flicker = true
@@ -121,7 +113,7 @@ hl.config({
 	},
 	cursor = {
 		sync_gsettings_theme = true,
-		no_hardware_cursors = true, -- change to 1 if want to disable
+		no_hardware_cursors = 2, -- 2 = fallback/auto, 1 = force off, 0 = enabled
 		enable_hyprcursor = true,
 		warp_on_change_workspace = 2,
 		no_warps = false,
