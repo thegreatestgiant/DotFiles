@@ -38,7 +38,7 @@ hl.config({
 	master = {
 		allow_small_split = true,
 		new_status = "slave",
-		new_on_top = 1,
+		new_on_top = false,
 		mfact = 0.6,
 		smart_resizing = true,
 	},
