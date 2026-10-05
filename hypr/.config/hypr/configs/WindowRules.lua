@@ -464,35 +464,6 @@ hl.window_rule({
 	center = true,
 })
 
--- windowrule to avoid idle for fullscreen apps
-hl.window_rule({
-	match = {
-		fullscreen = true,
-	},
-	idle_inhibit = "fullscreen",
-})
-
-hl.window_rule({
-	match = {
-		fullscreen = 1,
-	},
-	idle_inhibit = "fullscreen",
-})
-
-hl.window_rule({
-	match = {
-		class = "^(.*)$",
-	},
-	idle_inhibit = "fullscreen",
-})
-
-hl.window_rule({
-	match = {
-		title = "^(.*)$",
-	},
-	idle_inhibit = "fullscreen",
-})
-
 -- FLOAT
 hl.window_rule({
 	match = {
@@ -810,10 +781,12 @@ hl.window_rule({
 hl.window_rule({
 	name = "Dropdown-Terminal",
 	match = {
-		class = "^(kitty-dropterm)$",
+		class = "kitty-dropterm",
 	},
 	workspace = "special:dropdown",
 	float = true,
+	center = true,
+	size = "(monitor_w*0.65) (monitor_h*0.55)",
 })
 
 -- LAYER RULES
