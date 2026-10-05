@@ -17,6 +17,14 @@
 [url "git@github.com:"]
     ; insteadOf = https://github.com/
     pushInsteadOf = https://github.com/
+[url "git@github-macslive:MacsLive/"]
+    insteadOf = git@github.com:MacsLive/
+    pushInsteadOf = git@github.com:MacsLive/
+    pushInsteadOf = https://github.com/MacsLive/
+[url "git@github-macslive:macslive/"]
+    insteadOf = git@github.com:macslive/
+    pushInsteadOf = git@github.com:macslive/
+    pushInsteadOf = https://github.com/macslive/
 [pull]
 	rebase = true
 ; [includeIf "gitdir:~/.local/share/nvim/lazy/"]
