@@ -1,4 +1,11 @@
--- NOTES: This is only for Hyprland >= 0.53
+-- Suppress maximize events so apps do not open maximized automatically
+hl.window_rule({
+	name = "suppress-maximize-events",
+	match = {
+		class = ".*",
+	},
+	suppress_event = "maximize",
+})
 
 --  Some samples on hwo to start apps on specific workspaces
 -- windowrule = match:tag email*, workspace 1
