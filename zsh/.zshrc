@@ -320,3 +320,6 @@ function bw-unlock() {
     rbw unlock
 }
 
+
+# opencode
+export PATH=/home/sean/.opencode/bin:$PATH
