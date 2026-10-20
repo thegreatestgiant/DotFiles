@@ -31,3 +31,5 @@
 ;     path = ~/.gitconfig-no-ssh-rewrite
 [core]
 	excludesfile = /home/sean/.gitignore_global
+[init]
+	defaultBranch = main
