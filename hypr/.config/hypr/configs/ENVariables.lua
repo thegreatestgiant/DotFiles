@@ -6,7 +6,7 @@ Search_Engine = '"https://www.google.com/search?q={}"'
 
 hl.env("EDITOR", "nvim")
 
-hl.env("AQ_DRM_DEVICES", "/dev/dri/by-path/pci-0000:65:00.0-card:/dev/dri/by-path/pci-0000:64:00.0-card")
+hl.env("AQ_DRM_DEVICES", "/dev/dri/card2:/dev/dri/card1")
 
 --## Toolkit Backend Variables ###
 hl.env("GDK_BACKEND", "wayland,x11,*")

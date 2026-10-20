@@ -179,13 +179,23 @@ bind("xf86Sleep", hl.dsp.exec_cmd("systemctl suspend"), "sleep", { locked = true
 bind("xf86Rfkill", hl.dsp.exec_cmd(scriptsDir .. "/AirplaneMode.sh"), "airplane mode", { locked = true })
 bind("Print", scriptsDir .. "/ScreenShot.sh --swappy", "screenshot (swappy)")
 
+-- Helper function to move to monitor if another monitor is connected, otherwise resize
+local function move_or_resize(dir, dx, dy)
+	local monitors = hl.get_monitors()
+	if monitors and #monitors > 1 then
+		hl.dispatch(hl.dsp.window.move({ monitor = dir }))
+	else
+		hl.dispatch(hl.dsp.window.resize({ x = dx, y = dy, relative = true }))
+	end
+end
+
 -- -----------------------------------------------------
 -- 📏 RESIZE, MOVE, & SWAP (Mouse/Keyboard)
 -- -----------------------------------------------------
-bind(mainMod .. " + SHIFT + h", hl.dsp.window.resize({ x = -50, y = 0, relative = true }), nil, { repeating = true })
-bind(mainMod .. " + SHIFT + l", hl.dsp.window.resize({ x = 50, y = 0, relative = true }), nil, { repeating = true })
-bind(mainMod .. " + SHIFT + k", hl.dsp.window.resize({ x = 0, y = -50, relative = true }), nil, { repeating = true })
-bind(mainMod .. " + SHIFT + j", hl.dsp.window.resize({ x = 0, y = 50, relative = true }), nil, { repeating = true })
+bind(mainMod .. " + SHIFT + h", function() move_or_resize("l", -50, 0) end, "move window to left monitor or resize left", { repeating = true })
+bind(mainMod .. " + SHIFT + l", function() move_or_resize("r", 50, 0) end, "move window to right monitor or resize right", { repeating = true })
+bind(mainMod .. " + SHIFT + k", function() move_or_resize("u", 0, -50) end, "move window to upper monitor or resize up", { repeating = true })
+bind(mainMod .. " + SHIFT + j", function() move_or_resize("d", 0, 50) end, "move window to lower monitor or resize down", { repeating = true })
 
 hl.bind(mainMod .. " + CTRL + h", hl.dsp.window.move({ direction = "l" }))
 hl.bind(mainMod .. " + CTRL + l", hl.dsp.window.move({ direction = "r" }))
