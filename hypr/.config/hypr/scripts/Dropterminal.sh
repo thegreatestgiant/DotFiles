@@ -2,6 +2,33 @@
 # Dropdown Terminal for Hyprland
 # Toggle a persistent dropdown terminal that lives in a special workspace.
 # This prevents it from stealing focus when changing desktops, and handles its own state natively.
+#
+# NOTE / TODO:
+# Look into replacing this script with Pyprland's Scratchpads plugin:
+# https://hyprland-community.github.io/pyprland/scratchpads.html
+#
+# Benefits of switching to Pyprland scratchpads:
+# - Native scratchpad manager designed specifically for Hyprland (`pypr toggle <name>`).
+# - Eliminates manual polling loops (`hyprctl clients -j | jq`), spawn waits, and sleep timers.
+# - Eliminates custom geometry/monitor scaling math (`bc`, monitor queries, resize/move calls).
+# - Built-in smooth show/hide animations (e.g., `animation = "fromTop"`).
+# - Handles multi-monitor focus and workspace behavior automatically without fullscreen quirks.
+#
+# Example setup:
+#   1. Install pyprland: `yay -S pyprland` (or pipx / pacman)
+#   2. Autostart in hyprland config: `exec-once = pypr`
+#   3. Configure `~/.config/hypr/pyprland.toml`:
+#        [pyprland]
+#        plugins = ["scratchpads"]
+#
+#        [scratchpads.term]
+#        animation = "fromTop"
+#        command = "kitty --class kitty-dropterm"
+#        class = "kitty-dropterm"
+#        size = "65% 65%"
+#        lazy = true
+#   4. Bind in Keybinds.lua:
+#        bind(mainMod .. " + grave", "pypr toggle term", "DropDown terminal")
 
 # Dynamically set rules for this specific special workspace
 hyprctl eval 'hl.config({ decoration = { blur = { special = false } } })' >/dev/null 2>&1

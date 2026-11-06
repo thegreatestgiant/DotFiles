@@ -63,6 +63,7 @@ bind(
 	hl.dsp.window.set_prop({ prop = "opaque", value = "toggle", window = "active" }),
 	"toggle active window opacity"
 )
+-- TODO: Look into Pyprland scratchpads instead of Dropterminal.sh (https://hyprland-community.github.io/pyprland/scratchpads.html)
 bind(mainMod .. " + grave", scriptsDir .. "/Dropterminal.sh", "DropDown terminal")
 
 -- -----------------------------------------------------
