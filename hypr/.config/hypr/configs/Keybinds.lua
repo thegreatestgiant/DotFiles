@@ -89,7 +89,13 @@ bind(mainMod .. " + tab", hl.dsp.focus({ workspace = "m+1" }), "next workspace")
 bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), "previous workspace")
 bind(mainMod .. " + U", function()
 	hl.config({ decoration = { blur = { special = true } } })
-	hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 5, bezier = "wind", style = "slidefade 15" })
+	hl.animation({
+		leaf = "specialWorkspace",
+		enabled = true,
+		speed = 6,
+		bezier = "wind",
+		style = "slidefadevert -100%",
+	})
 	hl.dispatch(hl.dsp.workspace.toggle_special(""))
 end, "toggle special workspace")
 bind(mainMod .. " + SHIFT + U", hl.dsp.window.move({ workspace = "special" }), "move to special workspace")
@@ -192,10 +198,18 @@ end
 -- -----------------------------------------------------
 -- 📏 RESIZE, MOVE, & SWAP (Mouse/Keyboard)
 -- -----------------------------------------------------
-bind(mainMod .. " + SHIFT + h", function() move_or_resize("l", -50, 0) end, "move window to left monitor or resize left", { repeating = true })
-bind(mainMod .. " + SHIFT + l", function() move_or_resize("r", 50, 0) end, "move window to right monitor or resize right", { repeating = true })
-bind(mainMod .. " + SHIFT + k", function() move_or_resize("u", 0, -50) end, "move window to upper monitor or resize up", { repeating = true })
-bind(mainMod .. " + SHIFT + j", function() move_or_resize("d", 0, 50) end, "move window to lower monitor or resize down", { repeating = true })
+bind(mainMod .. " + SHIFT + h", function()
+	move_or_resize("l", -50, 0)
+end, "move window to left monitor or resize left", { repeating = true })
+bind(mainMod .. " + SHIFT + l", function()
+	move_or_resize("r", 50, 0)
+end, "move window to right monitor or resize right", { repeating = true })
+bind(mainMod .. " + SHIFT + k", function()
+	move_or_resize("u", 0, -50)
+end, "move window to upper monitor or resize up", { repeating = true })
+bind(mainMod .. " + SHIFT + j", function()
+	move_or_resize("d", 0, 50)
+end, "move window to lower monitor or resize down", { repeating = true })
 
 hl.bind(mainMod .. " + CTRL + h", hl.dsp.window.move({ direction = "l" }))
 hl.bind(mainMod .. " + CTRL + l", hl.dsp.window.move({ direction = "r" }))
