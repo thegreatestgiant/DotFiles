@@ -6,6 +6,8 @@
 # Dynamically set rules for this specific special workspace
 hyprctl eval 'hl.config({ decoration = { blur = { special = false } } })' >/dev/null 2>&1
 hyprctl eval 'hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 5, bezier = "wind", style = "slidevert" })' >/dev/null 2>&1
+hyprctl eval 'hl.animation({ leaf = "specialWorkspaceIn", enabled = true, speed = 5, bezier = "wind", style = "slidevert" })' >/dev/null 2>&1
+hyprctl eval 'hl.animation({ leaf = "specialWorkspaceOut", enabled = true, speed = 5, bezier = "wind", style = "slidevert" })' >/dev/null 2>&1
 
 # Check if kitty-dropterm exists
 if ! hyprctl clients -j | jq -e 'any(.[]; .class == "kitty-dropterm")' > /dev/null; then

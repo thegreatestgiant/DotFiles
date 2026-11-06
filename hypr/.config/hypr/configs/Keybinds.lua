@@ -89,13 +89,9 @@ bind(mainMod .. " + tab", hl.dsp.focus({ workspace = "m+1" }), "next workspace")
 bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), "previous workspace")
 bind(mainMod .. " + U", function()
 	hl.config({ decoration = { blur = { special = true } } })
-	hl.animation({
-		leaf = "specialWorkspace",
-		enabled = true,
-		speed = 6,
-		bezier = "wind",
-		style = "slidefadevert -100%",
-	})
+	hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 6, bezier = "wind", style = "slidefadevert -100%" })
+	hl.animation({ leaf = "specialWorkspaceIn", enabled = true, speed = 6, bezier = "wind", style = "slidefadevert -100%" })
+	hl.animation({ leaf = "specialWorkspaceOut", enabled = true, speed = 8, bezier = "winOut", style = "slidefadevert -100%" })
 	hl.dispatch(hl.dsp.workspace.toggle_special(""))
 end, "toggle special workspace")
 bind(mainMod .. " + SHIFT + U", hl.dsp.window.move({ workspace = "special" }), "move to special workspace")
